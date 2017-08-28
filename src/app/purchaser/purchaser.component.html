@@ -1,0 +1,247 @@
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+<div id="wrapper">
+  <!-- begin TOP NAVIGATION -->
+  <app-header></app-header>
+  <!-- end TOP NAVIGATION -->
+
+  <!-- begin SIDE NAVIGATION -->
+  <app-sidemenu [page]="_apiService.page"></app-sidemenu>
+  <!-- end SIDE NAVIGATION -->
+
+  <!-- begin MAIN PAGE CONTENT -->
+  <div id="page-wrapper">
+
+    <div class="spl-content">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="page-title">
+            <!--<h1>
+              Admin <small>Dashboard</small>
+            </h1>-->
+            <ol class="breadcrumb">
+              <li><i class="fa fa-dashboard"></i> <a [routerLink]="['/dashboard']">Dashboard/MaterialManagement</a>
+              </li>
+              <!--<li class="active">Blank Page</li>-->
+            </ol>
+          </div>
+        </div>
+        <!-- /.col-lg-12 -->
+      </div>
+
+      <!-- begin PAGE TITLE ROW -->
+
+      <!-- /.row -->
+      <!-- end PAGE TITLE ROW -->
+
+      <div class="portlet portlet-default">
+        <div class="portlet-heading">
+          <div class="portlet-title">
+            <h4> Material Management </h4>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+        <div class="portlet-body">
+          <ul id="myTab" class="nav nav-tabs">
+            <li class="active"><a href="#balance" data-toggle="tab">Stock Request</a>
+            </li>
+            <li class=""><a href="#request" data-toggle="tab">Stock Request List</a>
+            </li>
+
+          </ul>
+          <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade active in" id="balance">
+              <div class="portlet portlet-default">
+                <div class="portlet-heading">
+                  <div class="portlet-title">
+                    <h4>Stock Balance</h4>
+                  </div>
+                  <div class="portlet-widgets">
+                    <a (click)="purchasepop()" style="cursor: pointer !important"><i class="fa fa-plus-square"></i> <span class="divider"></span> Purchase</a>
+                  </div>
+
+                  <div class="clearfix"></div>
+                </div>
+                <div *ngIf="stock_balance" class="portlet-body">
+                  <div class="form-horizontal">
+                    <div class="form-group">
+                      <div class="col-md-3">
+                        <input class="form-control" [(ngModel)]="filterQuery" placeholder="Search" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12 tabel_overflow">
+
+                      <table class="table table-bordered table-green table_color" [mfData]="stock_balance | dataFilter : filterQuery" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage"
+                        [(mfSortBy)]="sortBy" [(mfSortOrder)]="sortOrder">
+                        <thead>
+                          <tr>
+                            <th>
+                              <mfDefaultSorter by=""><span style="color:#fff">S.NO</span></mfDefaultSorter>
+                            </th>
+
+                            <th>
+                              <mfDefaultSorter by="item"><span style="color:#fff">Item Name</span></mfDefaultSorter>
+                            </th>
+
+
+                            <th>
+                              <mfDefaultSorter by="total_balance"><span style="color:#fff">Balance</span></mfDefaultSorter>
+                            </th>
+                            <th>
+                              <mfDefaultSorter by="total_balance"><span style="color:#fff">Choose Items</span></mfDefaultSorter>
+                            </th>
+
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let items of mf.data; let i=index;">
+                            <td>{{i+1}}</td>
+                            <td>{{items.item}}</td>
+                            <td *ngIf="items.total_balance <= items.minvalue"   > <span class="badge red" style="margin: 0px 40px 0px 2px;">{{items.total_balance}}</span> </td>
+                            <td *ngIf="items.total_balance >= items.minvalue" > <span class="badge green" style="margin: 0px 40px 0px 2px;">{{items.total_balance}}</span> </td>
+                            <td>
+                              <input type="checkbox" (ngModelChange)="clickedItem(items, $event)" checked="false" [ngModel]="!items">
+                            </td>
+                          </tr>
+                        </tbody>
+
+                        <tfoot>
+                          <tr>
+                            <td colspan="12">
+                              <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                            </td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+           <div class="tab-pane fade" id="request">
+              <div class="portlet portlet-default">
+                <div class="portlet-heading">
+                  <div class="portlet-title">
+                    <h4>Stock  </h4>
+                  </div>
+                  <div class="portlet-widgets">
+                    <!--<a   style="cursor: pointer !important"><i class="fa fa-plus-square"></i> <span class="divider"></span> Purchase</a>-->
+                  </div>
+
+                  <div class="clearfix"></div>
+                </div>
+                <div class="portlet-body">
+                  <div class="form-horizontal">
+                    <div class="form-group">
+                      <div class="col-md-3">
+                        <input class="form-control" [(ngModel)]="filterQuery" placeholder="Search" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12 tabel_overflow">
+
+                      <table class="table table-bordered table-green" [mfData]="purchaseData | dataFilter : filterQuery" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage"
+                        [(mfSortBy)]="sortBy" [(mfSortOrder)]="sortOrder">
+                        <thead>
+                          <tr>
+                            <th>
+                              <mfDefaultSorter by=""><span style="color:#fff">S.NO</span></mfDefaultSorter>
+                            </th>
+
+                            <th>
+                              <mfDefaultSorter by="item"><span style="color:#fff">Item Name</span></mfDefaultSorter>
+                            </th>
+                            <th>
+                              <mfDefaultSorter by="units"><span style="color:#fff">Units</span></mfDefaultSorter>
+                            </th>
+                            <th>
+                              <mfDefaultSorter by="quantity"><span style="color:#fff">Quantity</span></mfDefaultSorter>
+                            </th>
+
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let pdata of mf.data; let i=index;">
+                            <td>{{i+1}}</td>
+                            <td>{{pdata.item}}</td>
+                            <td>{{pdata.units}}</td>
+                            <td>{{pdata.quantity}}</td>
+                          </tr>
+                        </tbody>
+
+                        <tfoot>
+                          <tr>
+                            <td colspan="12">
+                              <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                            </td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>  
+            
+
+
+
+
+          </div>
+
+          <div class="clearfix"></div>
+        </div>
+      </div>
+      <!-- end DASHBOARD CIRCLE TILES -->
+    </div>
+    <!-- /.page-content -->
+  </div>
+  <!-- /#page-wrapper -->
+  <!-- end MAIN PAGE CONTENT -->
+</div>
+
+<popup #popup1>
+  <form (ngSubmit)="itemaddform()" method="post" [formGroup]="itemaddForm" class="form-horizontal">
+    <div class="col-md-12">
+      <a (click)="addactiveList()" class="btn btn-default btn-xs pull-right" style="margin-top: -70px;"> <i class="fa fa-plus-circle"></i> AddItem</a>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group" style="margin-bottom: 0px;">
+        <label class="col-md-4 "> ItemName</label>
+        <label class="col-md-4 ">Units</label>
+        <label class="col-md-4 ">Quantity</label>
+        </div>
+      </div>
+    </div>
+    <div *ngFor="let numbersActivities of itemaddForm.controls.activeList['controls'];let p=index;" class="">
+      <div [formGroup]="itemaddForm.controls.activeList.controls[p]">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <div class="col-md-4">
+                <input type="text" class="form-control" value="" formControlName="item" style="resize: vertical;" required>
+              </div>
+              <div class="col-md-4">
+                <input type="text" class="form-control" formControlName="units" style="resize: vertical;" required>
+              </div>
+              <div class="col-md-4">
+                <input type="number" class="form-control" formControlName="quantity" style="resize: vertical;" required>
+              </div>
+              <input type="hidden" class="form-control" formControlName="mid" style="resize: vertical;" required>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-md-12">
+        <button (click)="cancel()" class="btn btn-danger pull-right btn-square">Cancel</button>
+        <button (click)="purchasersubmit()" class="btn btn-default pull-right btn-square" style="margin-right: 5px">Submit</button>
+      </div>
+    </div>
+  </form>
+</popup>

@@ -1,0 +1,139 @@
+<nav class="navbar-side" role="navigation">
+  <div class="navbar-collapse sidebar-collapse collapse">
+    <ul id="side" class="nav navbar-nav side-nav">
+      <!-- begin SIDE NAV USER PANEL -->
+      <li class="side-user hidden-xs">
+        <img class="img-circle" src={{img}} alt="" height="150px">
+        <p class="welcome">
+          <i class="fa fa-key"></i> Logged in as
+        </p>
+        <p class="name tooltip-sidebar-logout">
+          {{usertype}}
+          <span class="last-name">{{name}}</span> <a style="color: inherit" class="logout_open" href="#logout" data-toggle="tooltip"
+            data-placement="top" title="Logout"><i class="fa fa-sign-out"></i></a>
+        </p>
+        <div class="clearfix"></div>
+      </li>
+      <!-- end SIDE NAV USER PANEL -->
+      <!-- begin SIDE NAV SEARCH -->
+      <!--<li class="nav-search">
+          <form role="form">
+            <input type="search" class="form-control" placeholder="Search...">
+            <button class="btn">
+                <i class="fa fa-search"></i>
+            </button>
+          </form>
+        </li>-->
+      <!-- end SIDE NAV SEARCH -->
+      <!-- begin DASHBOARD LINK -->
+      <li>
+        <a [ngClass]="{'active': (page=='dashboard')}" [routerLink]="['/dashboard']"><i class="fa fa-dashboard"></i> Dashboard</a>
+      </li>
+      <!-- end DASHBOARD LINK -->
+      <li>
+        <a [ngClass]="{'active': (page=='staff')}" [routerLink]="['/staff']"><i class="fa fa-users"></i> Staff</a>
+      </li>
+      <li class="panel">
+        <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle collapsed" data-target="#hostel">
+            <i class="fa fa-university"></i> Hostel <i class="fa fa-caret-down"></i>
+        </a>
+        <ul class="nav collapse" id="hostel" style="height: 0px;">
+          <li>
+            <a [ngClass]="{'active': (page=='semestery')}" [routerLink]="['/semestery']">
+                <i class="fa fa-angle-double-right"></i> Semester
+            </a>
+          </li>
+          <li>
+            <a [ngClass]="{'active': (page=='registration')}" [routerLink]="['/registration']">
+                <i class="fa fa-angle-double-right"></i> Registration
+            </a>
+          </li>
+          <li>
+            <a [ngClass]="{'active': (page=='complaints')}" [routerLink]="['/complaints']">
+                <i class="fa fa-angle-double-right"></i> Complaints
+            </a>
+          </li>
+
+           
+          <!-- <li>
+            <a href="morris.html">
+                <i class="fa fa-angle-double-right"></i> Morris.js
+            </a>
+          </li> -->
+        </ul>
+      </li>
+      <li class="panel">
+        <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle collapsed" data-target="#mess">
+            <i class="fa fa-university"></i> Mess <i class="fa fa-caret-down"></i>
+        </a>
+        <ul class="nav collapse" id="mess" style="height: 0px;">
+          <li>
+            <a [ngClass]="{'active': (page=='messincharg')}" [routerLink]="['/messincharg']">
+                <i class="fa fa-angle-double-right"></i> Material Management
+            </a>
+          </li>
+          <li>
+            <a [ngClass]="{'active': (page=='menulist')}" [routerLink]="['/menulist']">
+                <i class="fa fa-angle-double-right"></i> MenuList
+            </a>
+          </li>
+          <li>
+            <a [ngClass]="{'active': (page=='purchase')}" [routerLink]="['/purchase']">
+                <i class="fa fa-angle-double-right"></i> Purchase
+            </a>
+          </li>
+
+        </ul>
+      </li>
+      <!--  <li>
+        <a><i class="fa fa-book"></i> Library</a>
+      </li>
+      <li>
+        <a><i class="fa fa-file-o"></i> Issue Register</a>
+      </li>
+      <li>
+        <a><i class="fa fa-comments"></i> Grievances & Complaints</a>
+      </li> -->
+      <!-- begin CHARTS DROPDOWN -->
+      <!-- <li class="panel">
+        <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#charts">
+              <i class="fa fa-bar-chart-o"></i> Dropdown Menu <i class="fa fa-caret-down"></i>
+          </a>
+        <ul class="collapse nav" id="charts">
+          <li>
+            <a href="flot.html">
+                  <i class="fa fa-angle-double-right"></i> Flot Charts
+              </a>
+          </li>
+          <li>
+            <a href="morris.html">
+                  <i class="fa fa-angle-double-right"></i> Morris.js
+              </a>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a [ngClass]="{'active': (page=='college')}" [routerLink]="['/college']"><i class="fa fa-university"></i> College</a>
+      </li>
+      <li>
+        <a [ngClass]="{'active': (page=='departments')}" [routerLink]="['/departments']"><i class="fa fa-university"></i> Departments</a>
+      </li>
+      <li>
+        <a [ngClass]="{'active': (page=='courses')}" [routerLink]="['/courses']"><i class="fa fa-book"></i>Courses</a>
+      </li>
+      <li>
+        <a [ngClass]="{'active': (page=='branches')}" [routerLink]="['/branches']"><i class="fa fa-snowflake-o"></i>Branches</a>
+      </li>
+      <li>
+        <a [ngClass]="{'active': (page=='designations')}" [routerLink]="['/designations']"><i class="fa fa-user"></i>Designations</a>
+      </li>
+      <li>
+        <a [ngClass]="{'active': (page=='year')}" [routerLink]="['/year']"><i class="fa fa-calendar"></i>Year</a>
+      </li> -->
+      <!-- end PAGES DROPDOWN -->
+    </ul>
+    <!-- /.side-nav -->
+  </div>
+  <!-- /.navbar-collapse -->
+</nav>
+<!-- /.navbar-side -->

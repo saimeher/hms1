@@ -1,0 +1,167 @@
+<div id="wrapper">
+  <!-- begin TOP NAVIGATION -->
+  <app-header></app-header>
+  <!-- end TOP NAVIGATION -->
+
+  <!-- begin SIDE NAVIGATION -->
+  <app-sidemenu [page]="_apiService.page"></app-sidemenu>
+  <!-- end SIDE NAVIGATION -->
+
+  <!-- begin MAIN PAGE CONTENT -->
+  <div id="page-wrapper">
+
+    <div class="spl-content">
+
+      <!-- begin PAGE TITLE ROW -->
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="page-title">
+            <!--<h1>
+              Admin <small>Dashboard</small>
+            </h1>-->
+            <ol class="breadcrumb">
+              <li><i class="fa fa-dashboard"></i> <a [routerLink]="['/dashboard']">Dashboard</a>
+              </li>
+              <!--<li class="active">Blank Page</li>-->
+            </ol>
+          </div>
+        </div>
+        <!-- /.col-lg-12 -->
+      </div>
+      <!-- /.row -->
+      <!-- end PAGE TITLE ROW -->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="portlet portlet-default">
+            <div class="portlet-heading">
+              <div class="portlet-title">
+                <h4>Hostel Room Registration</h4>
+              </div>
+              <!-- <div class="portlet-widgets">
+                <i class="fa fa-plus-square" style="font-size:15px"></i> <a (click)="ClickButton()">Add Type</a>
+              </div> -->
+              <div class="clearfix"></div>
+            </div>
+            <div class="portlet-body">
+              <form [formGroup]="reg_Form" (ngSubmit)="addRegistrtion(reg_Form.value)">
+                <div class="bottom-mrg">
+                  <h3 class="bottom-line">Student Details</h3>
+                </div>
+                <!-- <span class="line">
+                    <h2><span>Student Details</span></h2>
+                </span> -->
+                <div class="">
+                  <div class="col-md-4">
+                    <label>Student Name</label>
+                    <input type="text" class="form-control" name="studentname" formControlName="studentname" required disabled />
+                  </div>
+                  <div class="col-md-4">
+                    <label>Date of Birth</label>
+                    <input type="text" class="form-control" name="dateofbirth" formControlName="dateofbirth" required />
+                  </div>
+                  <div class="col-md-4">
+                    <label>PwD (Person with Disability)</label>
+                    <select class="form-control" name="pwd" formControlName="pwd">
+                    <option>Select</option>
+                    <option value="1">YES</option>
+                    <option value="0">NO</option>
+                  </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label>Distance B/W House & Hostel(Kms)</label>
+                    <input type="text" class="form-control" name="distance" formControlName="distance" />
+                  </div>
+                  <div class="col-md-4">
+                    <label>Room Type</label>
+                    <select class="form-control" name="roomtype" formControlName="roomtype" (change)="RoomChange($event)">
+                      <option *ngFor="let types of roomType" value="{{types.type}}">{{types.type}}</option>
+                      <option value="all">All </option>
+                  </select>
+                  </div>
+
+                  <div class="col-md-4" *ngIf="priority">
+                    <label>Priority</label>
+                    <select class="form-control" name="priority" formControlName="priority">
+                      <option *ngFor="let types of roomType" value="{{types.type}}">{{types.type}}</option>
+                    </select>
+                  </div>
+                  <div class="clearfix"></div>
+                  <div class="bottom-mrg">
+                    <h3 class="bottom-line">Parent Info</h3>
+                  </div>
+                  <div class="col-md-4">
+                    <label>Father Full Name</label>
+                    <input type="text" class="form-control" name="fathername" formControlName="fathername" />
+                  </div>
+                  <!-- <div class="col-md-4">
+                  <label>Relation</label>
+                  <input type="text" class="form-control"/>
+                </div> -->
+                  <div class="col-md-4">
+                    <label>Occupation</label>
+                    <input type="text" class="form-control" name="occupation" formControlName="occupation" />
+                  </div>
+                  <!-- <div class="col-md-4">
+                  <label>Income</label>
+                  <input type="text" class="form-control"/>
+                </div> -->
+                  <div class="col-md-4">
+                    <label>Mobile.No</label>
+                    <input type="text" class="form-control" name="parentmobile" formControlName="parentmobile" />
+                  </div>
+                  <div class="col-md-4">
+                    <label>Email-ID</label>
+                    <input type="text" class="form-control" name="parentemail" formControlName="parentemail" />
+                  </div>
+                  <div class="col-md-4">
+                    <label>Address</label>
+                    <textarea class="form-control" name="parentaddress" formControlName="parentaddress"></textarea>
+                  </div>
+                  <div class="col-md-4">
+                    <label>Permanent Address</label>
+                    <textarea class="form-control" name="permanentaddress" formControlName="permanentaddress"></textarea>
+                  </div>
+                  <div class="clearfix"></div>
+                  <div class="bottom-mrg">
+                    <h3 class="bottom-line">Nearest Contact</h3>
+                  </div>
+                  <div class="col-md-4">
+                    <label>Name</label>
+                    <input type="text" class="form-control" name="guardianname" formControlName="guardianname" />
+                  </div>
+                  <div class="col-md-4">
+                    <label>Relation</label>
+                    <input type="text" class="form-control" name="guardianrelation" formControlName="guardianrelation" />
+                  </div>
+                  <div class="col-md-4">
+                    <label>Mobile.No</label>
+                    <input type="text" class="form-control" name="guardianmobile" formControlName="guardianmobile" />
+                  </div>
+                  <div class="col-md-4">
+                    <label>Email-ID</label>
+                    <input type="text" class="form-control" name="guardianemail" formControlName="guardianemail" />
+                  </div>
+                  <div class="col-md-4">
+                    <label>Address</label>
+                    <textarea class="form-control" name="guardianaddress" formControlName="guardianaddress"></textarea>
+                  </div>
+                  <div class="col-md-4">
+                    <label>Permanent Address</label>
+                    <textarea class="form-control" name="guardianpermanentaddress" formControlName="guardianpermanentaddress"></textarea>
+                  </div>
+                  <div class="clearfix"></div><br/>
+                  <div class="col-md-4 pull-right text-right"><button class="btn btn-default btn-sm btn-square" style="margin-right: 5px;">Submit</button><a class="btn btn-danger btn-sm btn-square">Cancel</a></div>
+                </div>
+              </form>
+              <div class="clearfix"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end DASHBOARD CIRCLE TILES -->
+    </div>
+    <!-- /.page-content -->
+  </div>
+  <!-- /#page-wrapper -->
+  <!-- end MAIN PAGE CONTENT -->
+</div>

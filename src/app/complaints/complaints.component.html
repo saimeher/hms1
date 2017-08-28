@@ -1,0 +1,99 @@
+<div id="wrapper">
+  <!-- begin TOP NAVIGATION -->
+  <app-header></app-header>
+  <!-- end TOP NAVIGATION -->
+
+  <!-- begin SIDE NAVIGATION -->
+  <app-sidemenu [page]="_apiService.page"></app-sidemenu>
+  <!-- end SIDE NAVIGATION -->
+
+  <!-- begin MAIN PAGE CONTENT -->
+  <div id="page-wrapper">
+
+    <div class="spl-content">
+
+      <!-- begin PAGE TITLE ROW -->
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="page-title">
+            <!--<h1>
+              Admin <small>Dashboard</small>
+            </h1>-->
+            <ol class="breadcrumb">
+              <li><i class="fa fa-dashboard"></i> <a [routerLink]="['/dashboard']">Dashboard</a>
+              </li>
+              <!--<li class="active">Blank Page</li>-->
+            </ol>
+          </div>
+        </div>
+        <!-- /.col-lg-12 -->
+      </div>
+      <!-- /.row -->
+      <!-- end PAGE TITLE ROW -->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="portlet portlet-default">
+            <div class="portlet-heading">
+              <div class="portlet-title">
+                <h4>Complaint Registration</h4>
+              </div>
+              <!-- <div class="portlet-widgets">
+                <i class="fa fa-plus-square" style="font-size:15px"></i> <a (click)="ClickButton()">Add Type</a>
+              </div> -->
+              <div class="clearfix"></div>
+            </div>
+            <div class="portlet-body">
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <label class="col-sm-4 control-label">Type</label>
+                  <div class="col-sm-4">
+                    <select class="form-control" name="complaint_type">
+                      <option>Complaint</option>
+                      <option>Issue</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-4 control-label">Priority</label>
+                  <div class="col-sm-4">
+                    <select class="form-control" name="complaint_priority">
+                      <option>High</option>
+                      <option>Medium</option>
+                      <option>Low</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-4 control-label">Category Type</label>
+                  <div class="col-sm-4">
+                    <select class="form-control" name="complaint_category_type">
+                      <option>Mess</option>
+                      <option>Hostel</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="textArea" class="col-sm-4 control-label">Feedback</label>
+                  <div class="col-sm-4">
+                    <textarea class="form-control" id="textArea" placeholder="Feedback" name="feedback"></textarea>
+                  </div>
+                </div>
+               
+                <div class="form-group">
+                  <!-- <label class="col-sm-4 control-label">Buttons</label> -->
+                  <div class="col-sm-4 col-md-offset-4">
+                    <button type="submit" class="btn btn-default btn-square">Submit</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end DASHBOARD CIRCLE TILES -->
+    </div>
+    <!-- /.page-content -->
+  </div>
+  <!-- /#page-wrapper -->
+  <!-- end MAIN PAGE CONTENT -->
+</div>
