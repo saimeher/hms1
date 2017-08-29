@@ -208,7 +208,8 @@ export class MessinchargeComponent implements OnInit {
      return this.fb.group({
       name: ['', Validators.required],
       quantity: ['', Validators.required],
-     // units: ['',Validators.required],
+      units: ['',Validators.required],
+       unitsarray :this.fb.array([])
     });
    }
    balance;
@@ -371,7 +372,7 @@ this.popup1.show();
      
       this.popToast();
       this.newitemaddForm.reset();
-      this.modal1.hide();
+      this.popup1.hide();
        this.getlists();
     }
     }
@@ -550,7 +551,7 @@ this.popup1.show();
       cancleBtnContent: "Cancel", // the text on your cancel button 
       confirmBtnClass: "btn btn-info", // your class for styling the confirm button 
       cancleBtnClass: "btn btn-default", // you class for styling the cancel button 
-      animation: "bounceInDown",// 'fadeInLeft', 'fadeInRight', 'fadeInUp', 'bounceIn','bounceInDown' 
+      animation: "fadeInDown",// 'fadeInLeft', 'fadeInRight', 'fadeInUp', 'bounceIn','bounceInDown' 
     };
     console.log(its);
 
@@ -584,10 +585,97 @@ this.popup1.show();
       cancleBtnContent: "Cancel", // the text on your cancel button 
       confirmBtnClass: "btn btn-info", // your class for styling the confirm button 
       cancleBtnClass: "btn btn-default", // you class for styling the cancel button 
-      animation: "bounceInDown",// 'fadeInLeft', 'fadeInRight', 'fadeInUp', 'bounceIn','bounceInDown' 
+      animation: "fadeInDown",// 'fadeInLeft', 'fadeInRight', 'fadeInUp', 'bounceIn','bounceInDown' 
     };
     console.log(its);
 
     this.popup4.show();
   }
+  close4()
+  {
+    this.popup4.hide();
+  }
+
+  getunits1(event,p)
+    {
+      console.log(p);
+      this.v='';
+      
+      if(p== '' || p==null) {
+        this.temp=[];
+        console.log(p,'dfgdgd');
+        this.v= 1;
+        let val={
+        'units' : this.v
+      }
+      console.log(val);
+      
+
+      this._apiService.getunits(val).subscribe(dat=>
+      {
+         this.dat1=dat.data.data;
+       //  console.log(dat.data.data.units);
+         this.test=this.dat1;
+         console.log(this.test,'jjjjj');
+         
+      //  this.test.forEach(element => {
+          this.temp.push({'units':dat.data.data.units});
+      //  });
+        console.log(dat,'dat test');
+         this.test=dat.data.data.units.split(",")
+         console.log(this.itemoutForm.controls.activeList1);
+        //  console.log(this.itemaddForm.controls.activeList[0].controls);
+     // this.itemaddForm.controls.activeList.value[0].unitsarray=[];
+      //  this.itemaddForm.controls.activeList.value[0].unitsarray[0] = this.test;
+          
+        // this.itemaddForm.value.activeList[p].units =  dat1.data[0].units.split(",");
+      //  console.log(this.itemaddForm.controls.activeList.value[p].unitsarray,'split test');
+        
+      })
+      }
+     if(p>=0){
+       console.log(p);
+       
+       this.temp=[];
+         this.v=event.target.value;
+      let val={
+        'units' : this.v
+      }
+      console.log(val);
+      
+       this._apiService.getunits(val).subscribe(dat=>
+      {
+        console.log(dat);
+       
+        
+        
+        this.dat1=dat.data.data;
+         console.log(dat.data.units);
+         this.test = this.dat1;
+        // this.test.forEach(element => {
+        //  this.temp.push(element);
+      //  });
+        console.log(dat,'dat test');
+         this.test=dat.data.data.units.split(",")
+        console.log(dat,'dat test');
+       // this.test=dat1.data[0].units.split(",")
+       console.log(this.itemoutForm.controls.activeList1);
+       console.log(this.itemoutForm.controls.activeList1.value[p].unitsarray);
+       
+      //  console.log(this.itemaddForm.controls.activeList[0].controls);
+             // this.itemaddForm.controls.activeList.value[p].unitsarray= [];
+        this.itemoutForm.controls.activeList1.value[p].unitsarray.push(this.test);
+       //  this.temp.push(this.test);
+   //this.itemaddForm.controls.activeList.value[p].unitsarray=[];
+        // this.itemaddForm.value.activeList[p].units =  dat1.data[0].units.split(",");
+        console.log(this.itemoutForm.controls.activeList1.value[p].unitsarray);
+        //
+      })
+     }
+  
+    }
+
+
+
+  
 }

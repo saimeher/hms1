@@ -16,8 +16,9 @@ import { ToasterContainerComponent, ToasterService, ToasterConfig, Toast } from 
 })
 export class PurchaserComponent implements OnInit {
   purchase_form: FormGroup;
- 
- itemaddForm : FormGroup; 
+  newitemaddForm: FormGroup;
+
+  itemaddForm: FormGroup;
   stock_balance;
   error = false;
   errorMessage = '';
@@ -29,7 +30,18 @@ export class PurchaserComponent implements OnInit {
   array;
   check_list = [];
   purchaseData
+  table = true;
+  dat0;
+  purchaser ='';
+  pdetails;
   @ViewChild('popup1') popup1: Popup;
+  @ViewChild('popup2') popup2: Popup;
+  @ViewChild('popup3') popup3: Popup;
+  public toasterconfig: ToasterConfig =
+  new ToasterConfig({
+    timeout: 5000
+  });
+  public toasterService: ToasterService;
   // public data;
   public filterQuery = "";
   public filterQuery1 = "";
@@ -43,10 +55,8 @@ export class PurchaserComponent implements OnInit {
     private _apiService: ApiService,
     public fb: FormBuilder,
     toasterService: ToasterService,
-  public popup : Popup) {
-
-
-
+    public popup: Popup) {
+    this.toasterService = toasterService;
     this.stockBalance();
   }
 
@@ -70,12 +80,19 @@ export class PurchaserComponent implements OnInit {
   ngOnInit() {
     this.stockBalance();
     this.purchaseItemsList();
+    this.getnames();
     this.itemaddForm = this.fb.group({
-        activeList: this.fb.array([]),
+      purchaser:['',Validators.required],
+      activeList: this.fb.array([]),
+    });
+    this.newitemaddForm = this.fb.group({
+      item1: ['', Validators.required],
+      units1: ['', Validators.required],
+      minvalue: ['', Validators.required]
     });
   }
 
-   addactiveList() {
+  addactiveList() {
 
     const control = <FormArray>this.itemaddForm.controls['activeList'];
     const addrCtrl = this.initLink();
@@ -86,20 +103,21 @@ export class PurchaserComponent implements OnInit {
 
   }
 
-initLink() {
+  initLink() {
     return this.fb.group({
+      purchaser:['',Validators.required],
       item: ['', Validators.required],
       quantity: ['', Validators.required],
-      units : ['', Validators.required],
-      mid:'',
+      units: ['', Validators.required],
+      mid: '',
     });
   }
   stockBalance() {
     this._apiService.stockBalance().subscribe(stockbalance => {
       if (stockbalance) {
-        for(var i=0;i<stockbalance.data.data.length;i++){
-          stockbalance.data.data[i].total_balance= parseInt(stockbalance.data.data[i].total_balance);
-          stockbalance.data.data[i].minvalue= parseInt(stockbalance.data.data[i].minvalue);
+        for (var i = 0; i < stockbalance.data.data.length; i++) {
+          stockbalance.data.data[i].total_balance = parseInt(stockbalance.data.data[i].total_balance);
+          stockbalance.data.data[i].minvalue = parseInt(stockbalance.data.data[i].minvalue);
         }
         this.stock_balance = stockbalance.data.data;
         console.log(this.stock_balance);
@@ -119,60 +137,61 @@ initLink() {
       console.log('uncheckde');
     }
   }
-controlArray;
+  controlArray;
   selectedItems = [];
-  unSelectedItems=[];
-  tempitems=[];
-  itemstatus= false;
+  unSelectedItems = [];
+  tempitems = [];
+  itemstatus = false;
   temp_val;
   clickedItem(val, event) {
     //this.selectedItems = [];
-    console.log(val);
-    this.temp_val= val
+    
+    console.log(val,event);
+    this.temp_val = val
     if (event) {
-      this.temp_val='';
-      this.itemstatus=true;
-       for(var i=0;i<this.selectedItems.length;i++){
-         if(this.selectedItems[i].mid==val.mid){
-           this.selectedItems.splice(i,1);
-           break;
-         }
-       }
+      this.temp_val = '';
+      this.itemstatus = true;
+      for (var i = 0; i < this.selectedItems.length; i++) {
+        if (this.selectedItems[i].mid == val.mid) {
+          this.selectedItems.splice(i, 1);
+          break;
+        }
+      }
       this.selectedItems.push(val);
-     // this.selectedItems = Array.from(new Set(this.tempitems));
+      // this.selectedItems = Array.from(new Set(this.tempitems));
       console.log(this.selectedItems);
-      
+
     } else {
-      this.temp_val='';
-      this.itemstatus=false;
+      this.temp_val = '';
+      this.itemstatus = false;
       var index = this.selectedItems.indexOf(val);
       if (index > -1) {
-        this.selectedItems.splice(index,1);
-        this.controlArray = <FormArray>this.itemaddForm.controls['activeList']; 
+        this.selectedItems.splice(index, 1);
+        this.controlArray = <FormArray>this.itemaddForm.controls['activeList'];
         this.controlArray.removeAt(this.itemaddForm.controls['activeList'][index]);
         this.unSelectedItems = this.selectedItems;
-        for(var i=0;i<this.selectedItems.length;i++){
-         if(this.selectedItems[i].mid==val.mid){
-           this.selectedItems.splice(i,1);
-            this.controlArray = <FormArray>this.itemaddForm.controls['activeList']; 
-        this.controlArray.removeAt(this.itemaddForm.controls['activeList'][i]);
-           break;
-         }
-       }
+        for (var i = 0; i < this.selectedItems.length; i++) {
+          if (this.selectedItems[i].mid == val.mid) {
+            this.selectedItems.splice(i, 1);
+            this.controlArray = <FormArray>this.itemaddForm.controls['activeList'];
+            this.controlArray.removeAt(this.itemaddForm.controls['activeList'][i]);
+            break;
+          }
         }
+      }
       //  let controlArray = <FormArray>this.itemaddForm.controls['activeList'];   
       this.selectedItems.forEach(app => {
-                    // const fb = this.initLink();
-                    // fb.patchValue(app);
-                    this.controlArray.removeAt(this.itemaddForm.controls['activeList'][index]);
-                    console.log(this.controlArray);
-                    
-            }); 
+        // const fb = this.initLink();
+        // fb.patchValue(app);
+        this.controlArray.removeAt(this.itemaddForm.controls['activeList'][index]);
+        console.log(this.controlArray);
+
+      });
     }
 
   }
-  purchasepop(){
-  
+  purchasepop() {
+    // this.table=false;
     this.popup.options = {
       header: "Purchase Items",
       color: "#34495e", // red, blue.... 
@@ -183,78 +202,87 @@ controlArray;
       cancleBtnContent: "Cancel", // the text on your cancel button 
       confirmBtnClass: "btn btn-info", // your class for styling the confirm button 
       cancleBtnClass: "btn btn-default", // you class for styling the cancel button 
-      animation: "bounceInDown",// 'fadeInLeft', 'fadeInRight', 'fadeInUp', 'bounceIn','bounceInDown' 
-  };
-  this.popup1.show();
-  console.log(this.selectedItems);
- console.log(this.temp_val);
- 
-  if(this.itemstatus){
-     this.controlArray = <FormArray>this.itemaddForm.controls['activeList'];       
-    // this.selectedItems = Array.from(new Set(this.tempitems));    
-    // this.controlArray=[];
+      animation: "fadeInDown",// 'fadeInLeft', 'fadeInRight', 'fadeInUp', 'bounceIn','bounceInDown' 
+    };
+    this.popup1.show();
+    console.log(this.selectedItems);
+    console.log(this.temp_val);
 
-for(var i=0;i<this.selectedItems.length;i++){
-      
-        
+    if (this.itemstatus) {
+      this.controlArray = <FormArray>this.itemaddForm.controls['activeList'];
+      // this.selectedItems = Array.from(new Set(this.tempitems));    
+      // this.controlArray=[];
+
+      for (var i = 0; i < this.selectedItems.length; i++) {
+
+
         this.controlArray.removeAt(this.itemaddForm.controls['activeList'][i]);
-         
-     
-       }
-        this.selectedItems.forEach(app => {
-          console.log(app);
-                    const fb = this.initLink();
-                    console.log(fb);
-                    fb.patchValue(app);
-                    this.controlArray.push(fb);
-            });
-  }
-  if(this.itemstatus==false){
- 
-    console.log(<FormArray>this.itemaddForm.controls['activeList']); 
-     this.controlArray = <FormArray>this.itemaddForm.controls['activeList'];  
-      for(var i=0;i<this.selectedItems.length;i++){
-      
-        
+
+
+      }
+      this.selectedItems.forEach(app => {
+        console.log(app);
+        const fb = this.initLink();
+        console.log(fb);
+        fb.patchValue(app);
+        this.controlArray.push(fb);
+      });
+    }
+    if (this.itemstatus == false) {
+
+      console.log(<FormArray>this.itemaddForm.controls['activeList']);
+      this.controlArray = <FormArray>this.itemaddForm.controls['activeList'];
+      for (var i = 0; i < this.selectedItems.length; i++) {
+
         this.controlArray.removeAt(this.itemaddForm.controls['activeList'][i]);
-         
-     
-       }
-         this.unSelectedItems.forEach(app => {
-                    const fb = this.initLink();
-                    fb.patchValue(app);
-                    this.controlArray.push(fb);
-            });
-  }
-   
-   
+
+
+      }
+      this.unSelectedItems.forEach(app => {
+        const fb = this.initLink();
+        fb.patchValue(app);
+        this.controlArray.push(fb);
+      });
+    }
+
+
   }
   cancel() {
     console.log('hello');
+    // this.stockBalance();
     this.popup1.hide();
-  //   this.selectedItems=[];
-  //  let temp =  this.unSelectedItems.length;
-  //  for(let i= 0 ; i<=temp ;i++){
-  //        this.selectedItems.splice(i,1);
-  //         this.unSelectedItems.splice(i,1);
-  //  }
-     
-    
-   //   this.stockBalance();
- }
- quantity:'';
- purchasersubmit()
- {
-   console.log(this.quantity)
- }
- dat;
- itemaddform(){
-      this._apiService.purchaserlist(this.itemaddForm.value).subscribe(dat=>
-    {
-      this.dat=dat;
+  }
+  quantity: '';
+  purchasersubmit() {
+    console.log(this.quantity)
+  }
+  dat;
+  itemaddform() {
+
+    console.log(this.purchaser);
+    //  this.insert['purchaser'] = this.purchaser;
+    console.log(this.itemaddForm.value);
+    this._apiService.purchaserlist(this.itemaddForm.value).subscribe(dat => {
+      this.dat = dat;
+      console.log(dat);
+      
+      if(dat){
+         for (var i = 0; i <= this.selectedItems.length; i++) {
+           
+            this.selectedItems.splice(i, 1);
+            this.controlArray = <FormArray>this.itemaddForm.controls['activeList'];
+            this.controlArray.removeAt(this.itemaddForm.controls['activeList'][i]);   
+        }
+        this.itemaddForm.reset();
+        this.popup1.hide();
+        // this.table=true;
+        this.stockBalance();
+        this.purchaseItemsList();
+      }
+      this.selectedItems=[];
     })
- }
-purchaseItemsList() {
+  }
+  purchaseItemsList() {
     this._apiService.purchaseItemsList().subscribe(pitems => {
       if (pitems) {
 
@@ -263,4 +291,94 @@ purchaseItemsList() {
       }
     })
   }
+
+  popToast() {
+    this.toasterService.pop('success', '', 'Successfully submitted your request');
+    }
+  popToast1() {
+    this.toasterService.pop('warning', 'Item Already Existed', 'ERROR');
+    }
+
+
+  submit() {
+    console.log(this.newitemaddForm.value);
+    this._apiService.addnewitem(this.newitemaddForm.value).subscribe(data2 => {
+      console.log(data2);
+
+      if (!data2.data.success) {
+        console.log('insert failsed');
+        this.popToast1();
+
+      }
+      else {
+        console.log(data2.data.success)
+        // this.data2 = data2;
+        console.log('insert');
+
+        this.popToast();
+        this.newitemaddForm.reset();
+        this.stockBalance();
+        this.popup2.hide();
+
+      }
+    }
+    )
+
+  }
+
+  addnewitem() {
+        this.popup.options = {
+        header: "Add New Item",
+        color: "#2c3e50", // red, blue.... 
+        widthProsentage: 40, // The with of the popou measured by browser width 
+        animationDuration: 1, // in seconds, 0 = no animation 
+       // showButtons: true, // You can hide this in case you want to use custom buttons 
+        confirmBtnContent: "OK", // The text on your confirm button 
+        cancleBtnContent: "Cancel", // the text on your cancel button 
+        confirmBtnClass: "btn btn-default", // your class for styling the confirm button 
+        cancleBtnClass: "btn btn-danger", // you class for styling the cancel button 
+        animation: "fadeInDown" // 'fadeInLeft', 'fadeInRight', 'fadeInUp', 'bounceIn','bounceInDown' 
+    };
+    this.popup2.show();
+    // this.modal1.show();
+  }
+
+  cancel1() {
+    this.popup2.hide();
+  }
+  getnames()
+  {
+   this._apiService.getnames().subscribe(dat0=>
+  {
+    this.dat0= dat0.data.data;
+    console.log(dat0.data.data);
+  })
+  }
+  purchaserdetails(pdata)
+  {
+    let d= {};
+    this.dat= pdata.pdate
+    d['dat'] = this.dat;
+   this._apiService.purchaserdetails(d).subscribe(pdetails=>{
+     this.pdetails=pdetails.data.data;
+     console.log(pdetails);
+   })
+   this.popup.options = {
+    header: "Add New Item",
+    color: "#2c3e50", // red, blue.... 
+    widthProsentage: 40, // The with of the popou measured by browser width 
+    animationDuration: 1, // in seconds, 0 = no animation 
+   // showButtons: true, // You can hide this in case you want to use custom buttons 
+    confirmBtnContent: "OK", // The text on your confirm button 
+    cancleBtnContent: "Cancel", // the text on your cancel button 
+    confirmBtnClass: "btn btn-default", // your class for styling the confirm button 
+    cancleBtnClass: "btn btn-danger", // you class for styling the cancel button 
+    animation: "fadeInDown" // 'fadeInLeft', 'fadeInRight', 'fadeInUp', 'bounceIn','bounceInDown' 
+  };
+   this.popup3.show();
+  }
+ close1()
+ {
+   this.popup3.hide();
+ }
 }

@@ -56,16 +56,6 @@
           <div id="myTabContent" class="tab-content">
             <div class="tab-pane fade active in" id="in">
               <button (click)="addactiveList()" class="btn btn-default btn-sm pull-right btn-custom " style="margin-top: 24px;"><i class="fa fa-plus" ></i> More</button>
-              <!--<div class="form-group">
-                    <div class="row">
-                      <label class="control-label col-md-1">Date</label>
-                      <div class="col-md-2">
-                        <my-date-picker locale="en" #start [(ngModel)]="insert_date" name="insert_date" placeholder="YYYY-MM-DD" [options]="myDatePickerOptions"
-                          (dateChanged)="onDateChanged($events)"></my-date-picker>
-                      </div>
-                      <button (click)="addnewitem()" type="button" style="margin-left:10px" class="btn btn-blue pull-left btn-square">Add new</button>
-                    </div>
-                  </div>-->
               <form (ngSubmit)="itemaddform()" method="post" [formGroup]="itemaddForm">
                 <div class="form-horizontal">
                   <div class="form-group">
@@ -80,30 +70,22 @@
                   </div>
                   <div class="form-group">
                     <div class="col-md-2">
-                      <label>Item <i class="fa fa-address-book" aria-hidden="true"></i></label>
-                    </div>
-                    <div class="col-md-2">
-                      <label>Units</label>
+                      <label>Item  </label>
                     </div>
                     <div class="col-md-2">
                       <label>Quantity</label>
                     </div>
-                    
+                     <div class="col-md-2">
+                        <label>Units</label>
+                      </div>
                     <div class="col-md-2">
                       <label>Receipt No</label>
                     </div>
                     <div class="col-md-2">
-                      <label>Price</label>
+                      <label>Total Price</label>
                     </div>
                   </div>
                 </div>
-
-
-                <!--<div class="input-group">
-  <span class="input-group-addon" id="basic-addon1">@</span>
-  <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
-</div>-->
-
                 <div *ngFor="let numbersActivities of itemaddForm.controls.activeList['controls'];let p=index;" class="">
                   <div [formGroup]="itemaddForm.controls.activeList.controls[p]">
 
@@ -111,33 +93,24 @@
                       <div class="form-group">
                         <div class="col-md-2">
                           <select class="form-control" formControlName="name" name="name{{p}}" (change)="getunits($event,p)">
-                            <option data-icon="glyphicon-heart" *ngFor="let it of data1" value="{{it.mid}}">{{it.item}}  </option>
-                            <!--<option *ngFor="let key of objectKeys(data1)" value="{{it.mid}}">{{key + ' : ' + data1[key]}}</option>-->
+                            <option data-icon="glyphicon-heart"  *ngFor="let it of data1" value="{{it.mid}}">{{it.item}}  </option>
                           </select>
-                          <!--<select class="selectpicker" formControlName="name" name="name{{p}}" >
-    <option data-icon="glyphicon-heart" *ngFor="let it of data1"  value="{{it.mid}}">{{it.item}} - {{it.units}}</option>
-</select>-->
 
 
                         </div>
-                         <div class="col-md-2">
-                          <select class="form-control" formControlName="units"  name="units{{p}}">   
-                                                       
-                          <option  *ngFor="let user of itemaddForm.controls.activeList.value[p].unitsarray"  value="{{user}}">{{user}}</option>
-                          </select>
-                        </div>
+                         
 
                         <div class="col-md-2">
                           <div class="input-group">
-                            <!--<span class="input-group-addon">Kg</span>-->
                             <input type="number" min="1" class="form-control" name="quantity" value="quantity" formControlName="quantity" />
                           </div>
                         </div>
-                        <!--<div class="col-md-2">
-                          <select class="form-control" formControlName="units"  name="units">                                     
-                          <option  *ngFor="let user of itemaddForm.value.activeList[p].unitsarray"  value="{{user}}">{{user}}</option>
-                          </select>
-                        </div>-->
+                        <div class="col-md-2">
+                            <select class="form-control" formControlName="units"  name="units{{p}}">   
+                                                         
+                            <option  *ngFor="let user of itemaddForm.controls.activeList.value[p].unitsarray"  value="{{user}}">{{user}}</option>
+                            </select>
+                          </div>
                         <div class="col-md-2">
                           <input type="text" name="receipt_no" class="form-control" value="receipt_no" formControlName="receipt_no" />
                         </div>
@@ -151,7 +124,7 @@
                 </div>
                 <div class="row">
                   <div class="col-md-2">
-                    <button type="submit"   class="btn btn-default btn-square col-md-6" style="margin-top: 25px;">Submit</button>
+                    <button type="submit"  [disabled]=!itemaddForm.valid  class="btn btn-default btn-square col-md-6" style="margin-top: 25px;">Submit</button>
                   </div>
                 </div>
                 <!-- </div> -->
@@ -185,9 +158,9 @@
                     <div class="col-md-3">
                       <label>Quantity</label>
                     </div>
-                    <!--<div class="col-md-3">
+                    <div class="col-md-3">
                       <label>Units</label>
-                    </div>-->
+                    </div>
 
                   </div>
                 </div>
@@ -198,27 +171,21 @@
                       <div class="form-group">
                         <div class="col-md-3">
 
-                          <select class="form-control" formControlName="name" name="name">
-                        <option *ngFor="let it of data1" value="{{it.mid}}">{{it.item}} - {{it.units}}</option>
+                          <select class="form-control" formControlName="name" name="name{{p}}" (change)="getunits1($event,p)">
+                        <option *ngFor="let it of data1" value="{{it.mid}}">{{it.item}}</option>
                       </select>
+                        </div>
+
+                        <div class="col-md-2">
+                          <select class="form-control" formControlName="units"  name="units{{p}}">   
+                                                       
+                          <option  *ngFor="let user of itemoutForm.controls.activeList1.value[p].unitsarray"  value="{{user}}">{{user}}</option>
+                          </select>
                         </div>
                         <div class="col-md-2">
 
                           <input type="number" min="1" class="form-control" name="quantity" value="quantity" formControlName="quantity" />
                         </div>
-                        <!--<div class="col-md-2">
-
-                          <select class="form-control" formControlName="units" name="units">
-                            <option *ngFor="let it of units" value="{{it.u}}">{{it.u}}</option>                                 
-                          </select>
-                        </div>-->
-
-
-                        <!-- <div class="col-md-4">
-
-                          <button *ngIf="p > 0 " (click)="removeList1(p)" type="button" style="margin-right:10px" class="btn btn-danger pull-right btn-square">Remove</button>
-                          <button (click)="addactiveList1()" type="button" style="margin-right:10px" class="btn btn-green pull-right btn-square">{{p}}Add More</button>
-                        </div> -->
                         <a *ngIf="1<itemoutForm.controls.activeList1.length" (click)="removeList1(p)" style="margin-top: 0px;  cursor:pointer"><i class="fa fa-trash" style="font-size: 25px; margin-top: 10px; color: #ff3833;"></i></a>
                       </div>
                     </div>
@@ -264,25 +231,25 @@
                         <thead>
                           <tr>
                             <th>
-                              <mfDefaultSorter by="edate">S.NO</mfDefaultSorter>
+                              <mfDefaultSorter by="edate"><span style="color:#fff">S.NO</span> </mfDefaultSorter>
                             </th>
                             <th>
-                              <mfDefaultSorter by="insert_dt">Transaction Date</mfDefaultSorter>
+                              <mfDefaultSorter by="insert_dt"><span style="color:#fff">Transaction Date</span> </mfDefaultSorter>
                             </th>
                             <th>
-                              <mfDefaultSorter by="item_name">Item Name</mfDefaultSorter>
+                              <mfDefaultSorter by="item_name"><span style="color:#fff">Item Name</span> </mfDefaultSorter>
                             </th>
                             <th>
-                              <mfDefaultSorter by="trans_type">Item Added Type</mfDefaultSorter>
+                              <mfDefaultSorter by="trans_type"><span style="color:#fff">Item Added Type</span> </mfDefaultSorter>
                             </th>
                             <th>
-                              <mfDefaultSorter by="quantity">Quantity</mfDefaultSorter>
+                              <mfDefaultSorter by="quantity"><span style="color:#fff">Quantity</span></mfDefaultSorter>
                             </th>
                             <th>
-                              <mfDefaultSorter by="price">Price</mfDefaultSorter>
+                              <mfDefaultSorter by="price"><span style="color:#fff">Price</span></mfDefaultSorter>
                             </th>
                             <th>
-                              <mfDefaultSorter by="balance">Balance</mfDefaultSorter>
+                              <mfDefaultSorter by="balance"><span style="color:#fff">Balance</span></mfDefaultSorter>
                             </th>
 
                           </tr>
@@ -295,7 +262,7 @@
                             <td>{{item.trans_type}}</td>
                             <td>{{item.quantity}}</td>
                             <td>{{item.price}}</td>
-                            <td>{{item.balance}}</td>
+                            <td>{{item.balance}} {{item.units}} </td>
 
 
                           </tr>
@@ -346,16 +313,16 @@
                         <thead>
                           <tr>
                             <th>
-                              <mfDefaultSorter by="">S.NO</mfDefaultSorter>
+                              <mfDefaultSorter by=""><span style="color:#fff">S.NO </span></mfDefaultSorter>
                             </th>
 
                             <th>
-                              <mfDefaultSorter by="item">Item Name</mfDefaultSorter>
+                              <mfDefaultSorter by="item"><span style="color:#fff"> Item Name</span></mfDefaultSorter>
                             </th>
 
 
                             <th>
-                              <mfDefaultSorter by="total_balance">Balance</mfDefaultSorter>
+                              <mfDefaultSorter by="total_balance"><span style="color:#fff"> Balance</span></mfDefaultSorter>
                             </th>
 
                           </tr>
@@ -364,8 +331,8 @@
                           <tr *ngFor="let items of mf.data; let i=index;">
                             <td>{{i+1}}</td>
                             <td>{{items.item}}</td>
-                                <td *ngIf="items.total_balance  >= items.minvalue"><span class="badge green" style="margin: 0px 40px 0px 2px;">{{items.total_balance}}</span></td>
-                            <td *ngIf="items.total_balance <= items.minvalue"><span class="badge red " style="margin: 0px 40px 0px 2px;">{{items.total_balance}}</span></td>
+                                <td *ngIf="items.total_balance  >= items.minvalue"><span class="badge green" style="margin: 0px 40px 0px 2px;">{{items.total_balance}} {{items.units}}</span></td>
+                            <td *ngIf="items.total_balance <= items.minvalue"><span class="badge red " style="margin: 0px 40px 0px 2px;">{{items.total_balance}}{{items.units}}</span></td>
                           </tr>
                         </tbody>
 
@@ -408,14 +375,14 @@
                         <thead>
                           <tr>
                             <th>
-                              <mfDefaultSorter by="">S.NO</mfDefaultSorter>
+                              <mfDefaultSorter by=""><span style="color:#fff"> S.NO</span> </mfDefaultSorter>
                             </th>
 
                             <th>
-                              <mfDefaultSorter by="item">Item Name</mfDefaultSorter>
+                              <mfDefaultSorter by="item"><span style="color:#fff"> Item Name</span></mfDefaultSorter>
                             </th>
                             <th>
-                              <mfDefaultSorter by="minvalue">Minimum Stock</mfDefaultSorter>
+                              <mfDefaultSorter by="minvalue"><span style="color:#fff"> Minimum Stock</span> </mfDefaultSorter>
                             </th>
 
                             <th>Details if edited</th>
@@ -462,8 +429,6 @@
     </div>
     <!-- /.page-content -->
   </div>
-  <!-- /#page-wrapper -->
-  <!-- end MAIN PAGE CONTENT -->
 </div>
 
 <app-modal #modal1>
@@ -639,7 +604,7 @@
               <div class="form-group">
                 <div class="col-sm-8 col-sm-offset-4">
                   <button type="submit" [disabled]=!newitemaddForm.valid class="btn btn-default btn-square" style="margin-top: 25px;">Submit</button>
-                  <button data-dismiss="modal" class="pull-right" (click)="close()" class="btn btn-danger btn-square" style="margin-top: 25px;">Close</button>
+                  <button data-dismiss="modal" class="pull-right" (click)="close4()" class="btn btn-danger btn-square" style="margin-top: 25px;">Close</button>
 
                   <!--<a data-dismiss="modal" class="pull-right" (click)="close()">x</a>-->
                 </div>

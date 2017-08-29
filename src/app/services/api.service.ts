@@ -102,7 +102,23 @@ deleteitem(data)
 {
     return this.callApi(AppSettings.DELETEITEM_API, 'post', data);
 }
+selected_PurchaseData(data){
+   return this.callApi(AppSettings.SELECTED_PURCHASEDATA, 'post', data);
+}
 
+itembuy(body) {
+   return this.callApi(AppSettings.ITEMBUY_API, 'post', body);
+}
+getnames()
+{
+  const body = {}
+  return this.callApi(AppSettings.GETNAMES_API, 'get', body);
+
+}
+purchaserdetails(body)
+{
+  return this.callApi(AppSettings.PURCHASERDETAILS_API, 'post', body);
+}
   // responsible for making api calls
   callApi(url: string, method: string, body: Object): Observable<any> {
     console.log(`Http call - url: ${url}, body: ${JSON.stringify(body)}`);

@@ -79,9 +79,15 @@
           </li>
           <li>
             <a [ngClass]="{'active': (page=='purchase')}" [routerLink]="['/purchase']">
-                <i class="fa fa-angle-double-right"></i> Purchase
+                <i class="fa fa-angle-double-right"></i> Purchase Management
             </a>
           </li>
+          <li>
+            <a [ngClass]="{'active': (page=='purchaseitems')}" [routerLink]="['/purchaseitems']">
+                <i class="fa fa-angle-double-right"></i> To be Purchased
+            </a>
+          </li>
+          
 
         </ul>
       </li>

@@ -19,7 +19,7 @@
               Admin <small>Dashboard</small>
             </h1>-->
             <ol class="breadcrumb">
-              <li><i class="fa fa-dashboard"></i> <a [routerLink]="['/dashboard']">Dashboard/MaterialManagement</a>
+              <li><i class="fa fa-dashboard"></i> <a [routerLink]="['/dashboard']">Dashboard/Purchase Management</a>
               </li>
               <!--<li class="active">Blank Page</li>-->
             </ol>
@@ -36,7 +36,7 @@
       <div class="portlet portlet-default">
         <div class="portlet-heading">
           <div class="portlet-title">
-            <h4> Material Management </h4>
+            <h4> Purchase Management </h4>
           </div>
           <div class="clearfix"></div>
         </div>
@@ -55,8 +55,10 @@
                   <div class="portlet-title">
                     <h4>Stock Balance</h4>
                   </div>
+
                   <div class="portlet-widgets">
-                    <a (click)="purchasepop()" style="cursor: pointer !important"><i class="fa fa-plus-square"></i> <span class="divider"></span> Purchase</a>
+                    <a (click)="purchasepop()"><i class="fa fa-plus-square"></i> <span class="divider"></span> Purchase</a>
+                    <a (click)="addnewitem()" type="button"> <i class="fa fa-plus-square"></i><span class="divider"></span>Add new</a>
                   </div>
 
                   <div class="clearfix"></div>
@@ -72,8 +74,8 @@
                   <div class="row">
                     <div class="col-md-12 tabel_overflow">
 
-                      <table class="table table-bordered table-green table_color" [mfData]="stock_balance | dataFilter : filterQuery" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage"
-                        [(mfSortBy)]="sortBy" [(mfSortOrder)]="sortOrder">
+                      <table class="table table-bordered table-green table_color" [mfData]="stock_balance | dataFilter : filterQuery" #mf="mfDataTable"
+                        [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="sortBy" [(mfSortOrder)]="sortOrder">
                         <thead>
                           <tr>
                             <th>
@@ -98,8 +100,8 @@
                           <tr *ngFor="let items of mf.data; let i=index;">
                             <td>{{i+1}}</td>
                             <td>{{items.item}}</td>
-                            <td *ngIf="items.total_balance <= items.minvalue"   > <span class="badge red" style="margin: 0px 40px 0px 2px;">{{items.total_balance}}</span> </td>
-                            <td *ngIf="items.total_balance >= items.minvalue" > <span class="badge green" style="margin: 0px 40px 0px 2px;">{{items.total_balance}}</span> </td>
+                            <td *ngIf="items.total_balance <= items.minvalue"> <span class="badge red" style="margin: 0px 40px 0px 2px;">{{items.total_balance}} {{items.units}}</span>                              </td>
+                            <td *ngIf="items.total_balance >= items.minvalue"> <span class="badge green" style="margin: 0px 40px 0px 2px;">{{items.total_balance}} {{items.units}}</span>                              </td>
                             <td>
                               <input type="checkbox" (ngModelChange)="clickedItem(items, $event)" checked="false" [ngModel]="!items">
                             </td>
@@ -120,11 +122,11 @@
               </div>
             </div>
 
-           <div class="tab-pane fade" id="request">
+            <div class="tab-pane fade" id="request">
               <div class="portlet portlet-default">
                 <div class="portlet-heading">
                   <div class="portlet-title">
-                    <h4>Stock  </h4>
+                    <h4>Stock </h4>
                   </div>
                   <div class="portlet-widgets">
                     <!--<a   style="cursor: pointer !important"><i class="fa fa-plus-square"></i> <span class="divider"></span> Purchase</a>-->
@@ -152,23 +154,38 @@
                             </th>
 
                             <th>
-                              <mfDefaultSorter by="item"><span style="color:#fff">Item Name</span></mfDefaultSorter>
+                              <mfDefaultSorter by="item"><span style="color:#fff">Date</span></mfDefaultSorter>
                             </th>
+                            <!-- <th>
+                                <mfDefaultSorter by="quantity"><span style="color:#fff">Quantity</span></mfDefaultSorter>
+                             </th>
                             <th>
                               <mfDefaultSorter by="units"><span style="color:#fff">Units</span></mfDefaultSorter>
+                            </th>  -->
+                            <th>
+                              <mfDefaultSorter by="purchaser"><span style="color:#fff">Purchaser</span></mfDefaultSorter>
                             </th>
                             <th>
-                              <mfDefaultSorter by="quantity"><span style="color:#fff">Quantity</span></mfDefaultSorter>
+                              <mfDefaultSorter by="mobile_no"><span style="color:#fff">Mobile_no</span></mfDefaultSorter>
                             </th>
-
+                            <th>
+                              <span style="color:#fff">Status</span>
+                            </th>
                           </tr>
                         </thead>
                         <tbody>
                           <tr *ngFor="let pdata of mf.data; let i=index;">
                             <td>{{i+1}}</td>
-                            <td>{{pdata.item}}</td>
-                            <td>{{pdata.units}}</td>
+                            <!-- <td>{{pdata.item}}</td>
                             <td>{{pdata.quantity}}</td>
+                            <td>{{pdata.units}}</td> -->
+                            <td>{{pdata.pdate}}</td>
+                            <td>{{pdata.name}}</td>
+                            <td>{{pdata.mobile_no}}</td>
+                            <td> <a class="btn btn-info btn-xs btn-square" (click)="purchaserdetails(pdata)" style="margin-right: 5px; width: 50px;">Edit</a></td>
+                            <!-- <td *ngIf="pdata.status =='0' "><span class="badge red" style="margin: 0px 40px 0px 2px;">To be Buyed</span> </td>
+                            <td *ngIf="pdata.status =='1' "><span class="badge green" style="margin: 0px 40px 0px 2px;">Buyed</span> </td>-->
+                            <!-- <td>{{pdata.}} -->
                           </tr>
                         </tbody>
 
@@ -184,14 +201,8 @@
                   </div>
                 </div>
               </div>
-            </div>  
-            
-
-
-
-
+            </div>
           </div>
-
           <div class="clearfix"></div>
         </div>
       </div>
@@ -205,15 +216,17 @@
 
 <popup #popup1>
   <form (ngSubmit)="itemaddform()" method="post" [formGroup]="itemaddForm" class="form-horizontal">
-    <div class="col-md-12">
-      <a (click)="addactiveList()" class="btn btn-default btn-xs pull-right" style="margin-top: -70px;"> <i class="fa fa-plus-circle"></i> AddItem</a>
+    <div class="col-md-2">
+      <select class="form-control" formControlName="purchaser" name="purchaser">
+              <option *ngFor="let user of dat0" value="{{user.id}}">{{user.name}}</option>
+            </select>
     </div>
     <div class="row">
       <div class="col-md-12">
         <div class="form-group" style="margin-bottom: 0px;">
-        <label class="col-md-4 "> ItemName</label>
-        <label class="col-md-4 ">Units</label>
-        <label class="col-md-4 ">Quantity</label>
+          <label class="col-md-4 "> ItemName</label>
+          <label class="col-md-4 ">Units</label>
+          <label class="col-md-4 ">Quantity</label>
         </div>
       </div>
     </div>
@@ -223,10 +236,10 @@
           <div class="col-md-12">
             <div class="form-group">
               <div class="col-md-4">
-                <input type="text" class="form-control" value="" formControlName="item" style="resize: vertical;" required>
+                <input type="text" readonly class="form-control" value="" formControlName="item" style="resize: vertical;" required>
               </div>
               <div class="col-md-4">
-                <input type="text" class="form-control" formControlName="units" style="resize: vertical;" required>
+                <input type="text" readonly class="form-control" formControlName="units" style="resize: vertical;" required>
               </div>
               <div class="col-md-4">
                 <input type="number" class="form-control" formControlName="quantity" style="resize: vertical;" required>
@@ -240,8 +253,107 @@
     <div class="form-group">
       <div class="col-md-12">
         <button (click)="cancel()" class="btn btn-danger pull-right btn-square">Cancel</button>
-        <button (click)="purchasersubmit()" class="btn btn-default pull-right btn-square" style="margin-right: 5px">Submit</button>
+        <button class="btn btn-default pull-right btn-square" style="margin-right: 5px">Submit</button>
       </div>
     </div>
   </form>
+</popup>
+
+<popup #popup2>
+  <div>
+    <div>
+      <div>
+        <div>
+          <div>
+            <h4> </h4>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+        <div class="portlet-body">
+          <form (ngSubmit)="submit()" method="post" [formGroup]="newitemaddForm">
+            <div class="form-horizontal">
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Item</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="item1" value="item1" formControlName="item1" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Units</label>
+                <div class="col-sm-10">
+                  <select class="form-control" formControlName="units1" name="units1">
+                          <option *ngFor="let it of units" value="{{it.u}}">{{it.u}}</option>                                 
+                    </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Minimum Stock</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="minvalue" value="minvalue" formControlName="minvalue" />
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-8 col-sm-offset-4">
+                  <button type="submit" [disabled]=!newitemaddForm.valid class="btn btn-default btn-square" style="margin-top: 25px;">Submit</button>
+                  <button data-dismiss="modal" class="pull-right" (click)="cancel1()" class="btn btn-danger btn-square" style="margin-top: 25px;">Close</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</popup>
+
+<popup #popup3>
+  <div>
+    <div>
+      <div>
+        <div>
+          <div>
+            <h4> </h4>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+        <div class="portlet-body">
+          <table class="table table-bordered table-green">
+            <thead>
+              <tr>
+                <th>
+                  S.no
+                </th>
+
+                <th>
+                  Item Name
+                </th>
+                <th>
+                  Quantity
+                </th>
+                <th>
+                  Units
+                </th>
+                <!-- <th>
+                  <span style="color:#fff">Status</span>
+                </th>
+                <th>
+                  <span style="color:#fff">Options</span>
+                </th> -->
+
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let pdata1 of pdetails; let i=index;">
+                <td>{{i+1}}</td>
+                <td>{{pdata1.item}}</td>
+                <td>{{pdata1.quantity}}</td>
+                <td>{{pdata1.units}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </popup>

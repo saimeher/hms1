@@ -8,7 +8,7 @@ import { ComplaintsComponent } from './complaints/complaints.component';
 import {MessinchargeComponent} from './messincharge/messincharge.component';
 import { MenulistComponent } from './menulist/menulist.component';
 import { PurchaserComponent } from './purchaser/purchaser.component';
-
+import { PurchaseitemsComponent } from './purchaseitems/purchaseitems.component';
 const appRoutes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
@@ -19,7 +19,7 @@ const appRoutes: Routes = [
     {  path: 'messincharg', component: MessinchargeComponent, canActivate: [AuthGuard] },
     {path: 'menulist', component:MenulistComponent,canActivate:[AuthGuard]},
     {path: 'purchase', component:PurchaserComponent,canActivate:[AuthGuard]},
-    
+    {path: 'purchaseitems', component:PurchaseitemsComponent,canActivate:[AuthGuard]},
     { path: '', redirectTo: "login", pathMatch: "full" },
     { path: '**', redirectTo: 'dashboard', pathMatch: "full" }
 ];
