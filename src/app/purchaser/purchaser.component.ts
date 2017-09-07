@@ -30,13 +30,18 @@ export class PurchaserComponent implements OnInit {
   array;
   check_list = [];
   purchaseData
+  purchaseDatacount:string='100';
   table = true;
   dat0;
   purchaser ='';
   pdetails;
+  d;
+ btnsstatus=false;
+  All:string = '100';
   @ViewChild('popup1') popup1: Popup;
   @ViewChild('popup2') popup2: Popup;
   @ViewChild('popup3') popup3: Popup;
+  @ViewChild('popup4') popup4: Popup;
   public toasterconfig: ToasterConfig =
   new ToasterConfig({
     timeout: 5000
@@ -45,8 +50,9 @@ export class PurchaserComponent implements OnInit {
   // public data;
   public filterQuery = "";
   public filterQuery1 = "";
-  public rowsOnPage = 10;
-  public sortBy = "name";
+  public rowsOnPage = 20;
+  public sortBy = "";
+  public sortBy1="name";
   public sortOrder = "asc";
 
 
@@ -74,19 +80,34 @@ export class PurchaserComponent implements OnInit {
     { u: 'packets' },
     { u: 'gms' },
   ];
+  item_type: Array<any> = [
+    
+        { name: 'PULSES/DALS' },
+        { name: ' POWDERS AND OILS' },
+        { name: 'SPICES AND NUTS' },
+        { name: 'OTHER INGREDIENTS' },
+        {name: 'TOILETRIES'},
+        {name: 'CLEANING PRODUCTS'},
+        {name: 'POOJA ITEMS'},
+        {name: 'MISCELLENEOUS'},
+        {name: 'VEGETABLES'},
+      ];
 
   //  a: any;
   //  events={};
   ngOnInit() {
+    
     this.stockBalance();
     this.purchaseItemsList();
     this.getnames();
+    this.getCategoriesfornewItem();
     this.itemaddForm = this.fb.group({
       purchaser:['',Validators.required],
       activeList: this.fb.array([]),
     });
     this.newitemaddForm = this.fb.group({
       item1: ['', Validators.required],
+      item_type:['',Validators.required],
       units1: ['', Validators.required],
       minvalue: ['', Validators.required]
     });
@@ -106,9 +127,9 @@ export class PurchaserComponent implements OnInit {
   initLink() {
     return this.fb.group({
       purchaser:['',Validators.required],
-      item: ['', Validators.required],
+      item: ['',Validators.required],
       quantity: ['', Validators.required],
-      units: ['', Validators.required],
+      units: ['',Validators.required],
       mid: '',
     });
   }
@@ -121,6 +142,8 @@ export class PurchaserComponent implements OnInit {
         }
         this.stock_balance = stockbalance.data.data;
         console.log(this.stock_balance);
+         console.log(this.stock_balance.length);
+         this.All=this.stock_balance.length;
       }
     })
   }
@@ -147,6 +170,8 @@ export class PurchaserComponent implements OnInit {
     //this.selectedItems = [];
     
     console.log(val,event);
+    console.log(this.stock_balance.indexOf(val));
+    let inn=this.stock_balance.indexOf(val);
     this.temp_val = val
     if (event) {
       this.temp_val = '';
@@ -157,11 +182,15 @@ export class PurchaserComponent implements OnInit {
           break;
         }
       }
+      this.stock_balance[inn]['select']=true;
       this.selectedItems.push(val);
       // this.selectedItems = Array.from(new Set(this.tempitems));
+      console.log(this.stock_balance);
+      
       console.log(this.selectedItems);
 
     } else {
+        this.stock_balance[inn]['select']=false;
       this.temp_val = '';
       this.itemstatus = false;
       var index = this.selectedItems.indexOf(val);
@@ -192,7 +221,7 @@ export class PurchaserComponent implements OnInit {
   }
   purchasepop() {
     // this.table=false;
-    this.popup.options = {
+    this.popup1.options = {
       header: "Purchase Items",
       color: "#34495e", // red, blue.... 
       widthProsentage: 50, // The with of the popou measured by browser width 
@@ -204,7 +233,7 @@ export class PurchaserComponent implements OnInit {
       cancleBtnClass: "btn btn-default", // you class for styling the cancel button 
       animation: "fadeInDown",// 'fadeInLeft', 'fadeInRight', 'fadeInUp', 'bounceIn','bounceInDown' 
     };
-    this.popup1.show();
+
     console.log(this.selectedItems);
     console.log(this.temp_val);
 
@@ -220,12 +249,14 @@ export class PurchaserComponent implements OnInit {
 
 
       }
-      this.selectedItems.forEach(app => {
+      this.stock_balance.forEach(app => {
         console.log(app);
+          if(app.select){
         const fb = this.initLink();
         console.log(fb);
         fb.patchValue(app);
         this.controlArray.push(fb);
+          }
       });
     }
     if (this.itemstatus == false) {
@@ -238,12 +269,15 @@ export class PurchaserComponent implements OnInit {
 
 
       }
-      this.unSelectedItems.forEach(app => {
+      this.stock_balance.forEach(app => {
+        if(app.select){
         const fb = this.initLink();
         fb.patchValue(app);
         this.controlArray.push(fb);
+        }
       });
     }
+    this.popup1.show(this.popup1.options);
 
 
   }
@@ -276,6 +310,7 @@ export class PurchaserComponent implements OnInit {
         this.itemaddForm.reset();
         this.popup1.hide();
         // this.table=true;
+        this.popToast();
         this.stockBalance();
         this.purchaseItemsList();
       }
@@ -287,6 +322,7 @@ export class PurchaserComponent implements OnInit {
       if (pitems) {
 
         this.purchaseData = pitems.data.data;
+        this.purchaseDatacount= this.purchaseData.length;
         console.log(this.purchaseData);
       }
     })
@@ -364,7 +400,7 @@ export class PurchaserComponent implements OnInit {
      console.log(pdetails);
    })
    this.popup.options = {
-    header: "Add New Item",
+    header: "Material request",
     color: "#2c3e50", // red, blue.... 
     widthProsentage: 40, // The with of the popou measured by browser width 
     animationDuration: 1, // in seconds, 0 = no animation 
@@ -381,4 +417,75 @@ export class PurchaserComponent implements OnInit {
  {
    this.popup3.hide();
  }
+ status()
+ {
+   this.dat;
+   console.log(this.dat);
+   let v={};
+   v['dat'] = this.dat;
+   this._apiService.status(v).subscribe(d=>
+  {
+    this.d=d;
+    this.purchaseItemsList();
+    this.popToast();
+    this.popup3.hide();
+  })
+ }
+category;
+ addnewcategory()
+    {
+      this.popup.options = {
+        header: "Add Category",
+        color: "#34495e", // red, blue.... 
+        widthProsentage: 40, // The with of the popou measured by browser width 
+        animationDuration: 1, // in seconds, 0 = no animation 
+        showButtons: false, // You can hide this in case you want to use custom buttons 
+        confirmBtnContent: "ok", // The text on your confirm button 
+        cancleBtnContent: "Cancel", // the text on your cancel button 
+        confirmBtnClass: "btn btn-info", // your class for styling the confirm button 
+        cancleBtnClass: "btn btn-default", // you class for styling the cancel button 
+        animation: "fadeInDown",// 'fadeInLeft', 'fadeInRight', 'fadeInUp', 'bounceIn','bounceInDown' 
+      };
+
+      this.popup4.show();
+    }
+    close5()
+    {
+      this.popup4.hide();
+      this.category = '';
+    }
+
+  addcategory()
+    {
+      console.log(this.category);
+      let b={}
+      b['category']= this.category;
+      this._apiService.addcategory(b).subscribe(data8=>{
+        if(!data8.data.success){
+          console.log('insert failsed');
+           this.popToast1();
+       }
+        else{
+          console.log(data8.data.success)
+          // this.data2 = data2;
+          console.log('insert');
+          
+        
+          this.popToast();
+          this.category = '';
+          this.popup4.hide();
+         // this.getlists();
+        }
+    }
+   )
+  }
+
+  getItemCategory;
+  getCategoriesfornewItem(){
+    this._apiService.getCategoriesfornewItem().subscribe(Data=>{
+        console.log(Data);
+        this.getItemCategory=Data.data.data;
+         console.log(this.getItemCategory);
+      })
+  }
 }

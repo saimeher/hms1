@@ -9,13 +9,25 @@ import { AppSettings } from '../app.settings';
 // ectable()
 @Injectable()
 export class ApiService {
- 
 
 
+  public year;
+  public month;
+  public day;
   page = "dashboard";
 
-  constructor(private _http: Http) { }
-
+  constructor(private _http: Http) {
+      this.getlastInsertDate().subscribe(date=>{
+        console.log(date);
+        let date1=date.data.data;
+          this.year= JSON.parse(date1.year);
+          this.month= JSON.parse(date1.month);
+          this.day= JSON.parse(date1.day);       
+               
+      })
+   }
+  
+ 
   // getting designations data
   getdesignations() {
     const body = {}
@@ -29,7 +41,7 @@ export class ApiService {
 
 
   // venkat
-   // add room type 
+  // add room type 
   addRoomType(data) {
     return this.callApi(AppSettings.ADD_TYPE_API, 'post', data);
   }
@@ -60,68 +72,108 @@ export class ApiService {
   menulist(data) {
     return this.callApi(AppSettings.MENULIST_API, 'post', data);
   }
-  getmenulist()
-  {
-     const body = {}
-    return this.callApi(AppSettings.GETMENULIST_API,'get',body);
+  getmenulist() {
+    const body = {}
+    return this.callApi(AppSettings.GETMENULIST_API, 'get', body);
   }
   updatelist(data) {
     return this.callApi(AppSettings.UPDATELIST_API, 'post', data);
   }
 
-  stockRegister(){
+  stockRegister() {
     const body = {}
     return this.callApi(AppSettings.STOCKREGISTER_API, 'get', body);
   }
-   stockBalance(){
+  stockBalance() {
     const body = {}
     return this.callApi(AppSettings.STOCKBALANCE_API, 'get', body);
   }
-  getunits(data)
-  {
-    const body={}
+  getunits(data) {
+    const body = {}
     return this.callApi(AppSettings.GETUNITS_API, 'post', data);
   }
-  
-  purchaserlist(data)
-  {
-    console.log(data);  
+
+  purchaserlist(data) {
+    console.log(data);
     return this.callApi(AppSettings.PURCHASERLIST_API, 'post', data);
   }
- 
-  purchaseItemsList(){
+
+  purchaseItemsList() {
     const body = {}
     return this.callApi(AppSettings.PURCHASEITEMSLIST_API, 'get', body);
   }
 
   updatemateriallist(data) {
     return this.callApi(AppSettings.UPDATEMATERIALLIST_API, 'post', data);
-}
+  }
 
-deleteitem(data)
-{
+  deleteitem(data) {
     return this.callApi(AppSettings.DELETEITEM_API, 'post', data);
-}
-selected_PurchaseData(data){
-   return this.callApi(AppSettings.SELECTED_PURCHASEDATA, 'post', data);
-}
+  }
+  selected_PurchaseData(data) {
+    return this.callApi(AppSettings.SELECTED_PURCHASEDATA, 'post', data);
+  }
 
-itembuy(body) {
-   return this.callApi(AppSettings.ITEMBUY_API, 'post', body);
-}
-getnames()
-{
-  const body = {}
-  return this.callApi(AppSettings.GETNAMES_API, 'get', body);
+  itembuy(body) {
+    return this.callApi(AppSettings.ITEMBUY_API, 'post', body);
+  }
 
-}
-purchaserdetails(body)
-{
-  return this.callApi(AppSettings.PURCHASERDETAILS_API, 'post', body);
-}
+  getCategories() {
+    const body = {}
+    return this.callApi(AppSettings.GETCATEGORIES_API, 'get', body);
+  }
+
+  getItemsbyCategory(value) {
+    return this.callApi(AppSettings.GETITEMSBYCATEGORY_API, 'post', value);
+  }
+
+  getnames() {
+    const body = {}
+    return this.callApi(AppSettings.GETNAMES_API, 'get', body);
+
+  }
+  purchaserdetails(body) {
+    return this.callApi(AppSettings.PURCHASERDETAILS_API, 'post', body);
+  }
+  status(body) {
+    return this.callApi(AppSettings.STATUS_API, 'post', body);
+  }
+
+  purchasernames(body) {
+    return this.callApi(AppSettings.PURCHASERS_NAME_API, 'post', body);
+  }
+  purchaserupdate(body) {
+    return this.callApi(AppSettings.PURCHASERS_UPDATE_API, 'post', body);
+  }
+  delete1(body) {
+    return this.callApi(AppSettings.PURCHASERS_DELETE_API, 'post', body);
+  }
+
+  addcategory(body) {
+    return this.callApi(AppSettings.ADDCATEGORY_API, 'post', body);
+  }
+  getCategoriesfornewItem(){
+     const body = {}
+    return this.callApi(AppSettings.GETCATEGORIESFORNEWITEM, 'get', body);
+  }
+
+  getlastInsertDate(){
+    const body={}
+    return this.callApi(AppSettings.GETLASTINSERTDATE,'get',body);
+  }
+  reports(body)
+  {
+    return this.callApi(AppSettings.REPORTSDATE_API,'post',body);
+  }
+  details(body)
+  {
+    return this.callApi(AppSettings.DETAILS_API,'post',body);
+  }
+
+  
   // responsible for making api calls
   callApi(url: string, method: string, body: Object): Observable<any> {
-    console.log(`Http call - url: ${url}, body: ${JSON.stringify(body)}`);
+    // console.log(`Http call - url: ${url}, body: ${JSON.stringify(body)}`);
 
     const headers = new Headers({ 'Content-Type': 'application/json' });
     const options = new RequestOptions({ headers: headers });

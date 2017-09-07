@@ -25,7 +25,8 @@ import { MessinchargeComponent } from './messincharge/messincharge.component';
 import { MenulistComponent } from './menulist/menulist.component';
 import { PurchaserComponent } from './purchaser/purchaser.component';
 import { PurchaseitemsComponent } from './purchaseitems/purchaseitems.component';
-
+import { PurchasersComponent } from './purchasers/purchasers.component';
+import { ReportsComponent } from './reports/reports.component';
 
 
 import { MyDatePickerModule } from 'mydatepicker';
@@ -33,6 +34,7 @@ import {DataFilterPipe} from './datatable_filter';
 import {  ModalComponent } from './modal.component';
 import { ToasterModule, ToasterService } from 'angular2-toaster';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 
 
@@ -52,8 +54,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ModalComponent,
     MenulistComponent,
     PurchaserComponent,
-    PurchaseitemsComponent
-
+    PurchaseitemsComponent,
+    PurchasersComponent,
+    ReportsComponent
   ],
   imports: [
     BrowserModule,

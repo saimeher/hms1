@@ -14,7 +14,9 @@ export class LoginComponent implements OnInit {
   returnUrl: string;
   error = false;
   error_message;
-
+  public year1;
+  public month1;
+   public day1;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -32,7 +34,21 @@ export class LoginComponent implements OnInit {
     //alert('hi');
     this.authenticationService.login(this.model.username, this.model.password).subscribe(data => {
       this.router.navigate(['/dashboard']);
-      
+      if(data){
+      //    this._apiService.getlastInsertDate().subscribe(date=>{
+      //   console.log(date);
+      //   let date1=date.data.data;
+      //     this.year1= JSON.parse(date1.year);
+      //     this.month1= JSON.parse(date1.month);
+      //     this.day1= JSON.parse(date1.day);       
+      //     this._apiService.year=this.year1;
+      //       this._apiService.month=this.month1;
+      //         this._apiService.day=17;
+
+    
+      //      console.log( this._apiService.day,this.year1,this.month1,this.day1);
+      // })
+      }
     }, error => {
       this.error = true;
       this.error_message = 'Invalid Credentials..!';

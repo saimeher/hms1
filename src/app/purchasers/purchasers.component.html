@@ -1,0 +1,240 @@
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+<div id="wrapper">
+  <!-- begin TOP NAVIGATION -->
+  <app-header></app-header>
+  <!-- end TOP NAVIGATION -->
+
+  <!-- begin SIDE NAVIGATION -->
+  <app-sidemenu [page]="_apiService.page"></app-sidemenu>
+  <!-- end SIDE NAVIGATION -->
+
+  <!-- begin MAIN PAGE CONTENT -->
+  <div id="page-wrapper">
+
+    <div class="spl-content">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="page-title">
+            <!--<h1>
+              Admin <small>Dashboard</small>
+            </h1>-->
+            <ol class="breadcrumb">
+              <li><i class="fa fa-dashboard"></i> <a [routerLink]="['/dashboard']">Dashboard/Purchase Management</a>
+              </li>
+              <!--<li class="active">Blank Page</li>-->
+            </ol>
+          </div>
+        </div>
+        <!-- /.col-lg-12 -->
+      </div>
+
+      <!-- begin PAGE TITLE ROW -->
+
+      <!-- /.row -->
+      <!-- end PAGE TITLE ROW -->
+
+      <div class="portlet portlet-default">
+        <div class="portlet-heading">
+          <div class="portlet-title">
+            <h4> Purchaser List </h4>
+          </div>
+          <div class="portlet-widgets">
+            <a  (click)="purchaseradd()" style="cursor: pointer !important"><i class="fa fa-plus-square"></i> Add Purchaser</a>
+          </div>
+         
+          <div class="clearfix"></div>
+        </div>
+        <div class="portlet-body">
+          
+            <!-- <div class="tab-pane fade"> -->
+              
+                
+                  <div class="portlet-widgets">
+                    <!--<a   style="cursor: pointer !important"><i class="fa fa-plus-square"></i> <span class="divider"></span> Purchase</a>-->
+                  </div>
+                <div class="portlet-body">
+                  <div class="form-horizontal">
+                    <div class="form-group">
+                      <div class="col-md-3">
+                        <input class="form-control" [(ngModel)]="filterQuery" placeholder="Search" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12 tabel_overflow">
+
+                      <table class="table table-bordered table-green" [mfData]=" dat0 | dataFilter : filterQuery" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage"
+                        [(mfSortBy)]="sortBy" [(mfSortOrder)]="sortOrder">
+                        <thead>
+                          <tr>
+                            <th>
+                              <mfDefaultSorter by=""><span style="color:#fff">S.NO</span></mfDefaultSorter>
+                            </th>
+
+                            <th>
+                              <mfDefaultSorter by="item"><span style="color:#fff">Name</span></mfDefaultSorter>
+                            </th>
+                            <th>
+                              <mfDefaultSorter by="purchaser"><span style="color:#fff">Location</span></mfDefaultSorter>
+                            </th>
+                            <th>
+                              <mfDefaultSorter by="mobile_no"><span style="color:#fff">Mobile no</span></mfDefaultSorter>
+                            </th>
+                            <th>
+                              <span style="color:#fff">Details if edited</span>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let pdata of mf.data; let i=index;">
+                            <td>{{i+1}}</td>
+                            <!-- <td>{{pdata.item}}</td>
+                            <td>{{pdata.quantity}}</td>
+                            <td>{{pdata.units}}</td> -->
+                            <td>{{pdata.name}}</td>
+                            <td>{{pdata.location}}</td>
+                            <td>{{pdata.mobile_no}}</td>
+                             <td> <a class="btn btn-info btn-xs btn-square" (click)="purchaserdetails(pdata)" style="margin-right: 5px; width: 50px;">View</a>
+                              <a class="btn btn-info btn-xs btn-red" (click)="purchaserdetailsdelete(pdata)" style="margin-right: 5px; width: 50px;">Delete</a></td>
+                      
+                            <!-- <td *ngIf="pdata.status =='0' "><span class="badge red" style="margin: 0px 40px 0px 2px;">To be Buyed</span> </td>
+                            <td *ngIf="pdata.status =='1' "><span class="badge green" style="margin: 0px 40px 0px 2px;">Buyed</span> </td>-->
+                          </tr>
+                        </tbody>
+
+                        <tfoot>
+                          <tr>
+                            <td colspan="8">
+                              <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                            </td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </div>
+               
+            
+
+          <div class="clearfix"></div>
+        </div>
+      </div>
+      <!-- end DASHBOARD CIRCLE TILES -->
+    </div>
+    <!-- /.page-content -->
+  </div>
+  <!-- /#page-wrapper -->
+  <!-- end MAIN PAGE CONTENT -->
+</div>
+
+
+<popup #popup1>
+  <div>
+    <div>
+      <div>
+        <div>
+          <div>
+            <h4> </h4>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+        <div class="portlet-body">
+          <form (ngSubmit)="purchasernames()" method="post" [formGroup]="purchasernamesForm">
+            <div class="form-horizontal">
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Name</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="name" value="name" formControlName="name" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Address</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="location" value="location" formControlName="location" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Mobile no</label>
+                <div class="col-sm-10">    
+                  <input type="number" oninput="validity.valid||(value='');" min="10" max="10" class="form-control" name="mobile_no" value="mobile_no" formControlName="mobile_no" />
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-8 col-sm-offset-4">
+                  <button type="submit" [disabled]=!purchasernamesForm.valid class="btn btn-default btn-square" style="margin-top: 25px;">Submit</button>
+                  <button data-dismiss="modal" class="pull-right" (click)="cancel()" class="btn btn-danger btn-square" style="margin-top: 25px;">Close</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</popup>
+
+
+<popup #popup2>
+  <div>
+    <div>
+      <div>
+        <div>
+          <div>
+            <h4> </h4>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+        <div class="portlet-body">
+          <form (ngSubmit)="purchaserupdate()" method="post" [formGroup]="purchasernamesForm">
+            <div class="form-horizontal">
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Name</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="name" value="name" formControlName="name" disabled/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Address</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="location" value="location" formControlName="location" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Mobile no</label>
+                <div class="col-sm-10">
+                  <input  type="text" class="form-control" name="mobile_no" value="mobile_no" formControlName="mobile_no" />
+                </div>
+              </div>
+              <!-- <div class="form-group">
+                <div class="col-sm-10">
+                  <input  type="hidden" class="form-control" name="mid" value="id" formControlName="id" />
+                </div>
+              </div> -->
+              <div class="form-group">
+                <div class="col-sm-8 col-sm-offset-4">
+                  <button type="submit" [disabled]=!purchasernamesForm.valid class="btn btn-default btn-square" style="margin-top: 25px;">Submit</button>
+                  <button data-dismiss="modal" class="pull-right" (click)="cancel1()" class="btn btn-danger btn-square" style="margin-top: 25px;">Close</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</popup>
+
+
+<popup #popup3>
+    <div>
+  
+      <div>
+  
+        <div class="alert alert-success " role="alert ">Are you want to delete? - {{name}}</div>
+      </div>
+      <div>
+          <button type="button" class="btn btn-default btn-square" (click)="delete1();">Yes</button>
+          <button type="button" class="btn btn-danger btn-square" (click)="close1();">No</button>
+      </div>
+      <br>
+    </div>
+</popup>

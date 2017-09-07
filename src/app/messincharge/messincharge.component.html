@@ -38,51 +38,78 @@
           <div class="portlet-title">
             <h4> Material Management </h4>
           </div>
+          <div class="portlet-widgets">
+            <a (click)="addnewitem()" type="button" style="margin-left:10px" class=""><i class="fa fa-plus-square"></i> Add New Item</a>
+          </div>
           <div class="clearfix"></div>
         </div>
         <div class="portlet-body">
           <ul id="myTab" class="nav nav-tabs">
-            <li class="active"><a href="#in" data-toggle="tab">Material In</a>
-            </li>
-            <li class=""><a href="#out" data-toggle="tab">Material Out</a>
-            </li>
-            <li class=""><a href="#stock" data-toggle="tab">Stock Register</a>
-            </li>
-            <li class=""><a href="#balance" data-toggle="tab">Stock Balance</a>
-            </li>
-            <li class=""><a href="#material" data-toggle="tab">Materials</a>
-          </li>
+            <li class="active"><a href="#in" data-toggle="tab">Material In</a></li>
+            <li class=""><a href="#out" data-toggle="tab">Material Out</a></li>
+            <li class=""><a href="#stock" data-toggle="tab">Stock Register</a></li>
+            <li class=""><a href="#balance" data-toggle="tab">Stock Balance</a></li>
+            <li class=""><a href="#material" data-toggle="tab">Materials</a></li>
           </ul>
           <div id="myTabContent" class="tab-content">
             <div class="tab-pane fade active in" id="in">
               <button (click)="addactiveList()" class="btn btn-default btn-sm pull-right btn-custom " style="margin-top: 24px;"><i class="fa fa-plus" ></i> More</button>
-              <form (ngSubmit)="itemaddform()" method="post" [formGroup]="itemaddForm">
-                <div class="form-horizontal">
-                  <div class="form-group">
+              <!--<div class="form-group">
                     <div class="row">
                       <label class="control-label col-md-1">Date</label>
                       <div class="col-md-2">
-                        <my-date-picker locale="en" #start formControlName="insert_date" name="insert_date" placeholder="YYYY-MM-DD" [options]="myDatePickerOptions"
-                          (dateChanged)="onDateChanged($event)"></my-date-picker>
+                        <my-date-picker locale="en" #start [(ngModel)]="insert_date" name="insert_date" placeholder="YYYY-MM-DD" [options]="myDatePickerOptions"
+                          (dateChanged)="onDateChanged($events)"></my-date-picker>
                       </div>
                       <button (click)="addnewitem()" type="button" style="margin-left:10px" class="btn btn-blue pull-left btn-square">Add new</button>
                     </div>
-                  </div>
+                  </div>-->
+              <form (ngSubmit)="itemaddform()" method="post" [formGroup]="itemaddForm">
+                <div class="form-horizontal">
                   <div class="form-group">
                     <div class="col-md-2">
-                      <label>Item  </label>
+                      <label class="">Date <span style="color:red">*</span></label>
+                      <my-date-picker locale="en" #start formControlName="insert_date" name="insert_date" placeholder="YYYY-MM-DD" [options]="myDatePickerOptions"
+                        (dateChanged)="onDateChanged($event)"></my-date-picker>
                     </div>
-                    <div class="col-md-2">
-                      <label>Quantity</label>
-                    </div>
+                   
                      <div class="col-md-2">
-                        <label>Units</label>
-                      </div>
-                    <div class="col-md-2">
-                      <label>Receipt No</label>
+                      <label class=""> Receipt No  </label>
+                      <input type="text" [(ngModel)]="receiptnull" name="receipt_no" class="form-control" value="receipt_no" formControlName="receipt_no" />
                     </div>
                     <div class="col-md-2">
-                      <label>Total Price</label>
+                    <label class="control-label">file upload</label>
+                    <input type="file" multiple name="photo" (change)="onChange($event)"/>
+                  </div>
+                    <div class="col-md-2">
+                      <label class=""> Purchaser <span style="color:red">*</span></label>
+                      <select class="form-control" formControlName="purchaser" name="purchaser">
+                          <option   value="">--Select--</option>
+                          <option *ngFor="let user of dat0" value="{{user.id}}">{{user.name}}</option>
+                        </select>
+                    </div>
+                  </div>
+                  <div class="clearfix"></div>
+                  <div class="row">
+                    <div class="col-md-2">
+                      <label>Category  <span style="color:red">*</span> </label>
+                    </div>
+                    <div class="col-md-2">
+                      <label>Item  <span style="color:red">*</span> </label>
+                    </div>
+                    <div class="col-md-2">
+                      <label>Brand   </label>
+                    </div>
+
+                    <div class="col-md-2">
+                      <label>Quantity <span style="color:red">*</span></label>
+                    </div>
+                    <div class="col-md-1">
+                      <label>Units <span style="color:red">*</span></label>
+                    </div>
+
+                    <div class="col-md-2">
+                      <label>Total Price <span style="color:red">*</span></label>
                     </div>
                   </div>
                 </div>
@@ -92,73 +119,117 @@
                     <div class="form-horizontal">
                       <div class="form-group">
                         <div class="col-md-2">
-                          <select class="form-control" formControlName="name" name="name{{p}}" (change)="getunits($event,p)">
-                            <option data-icon="glyphicon-heart"  *ngFor="let it of data1" value="{{it.mid}}">{{it.item}}  </option>
+                          <select class="form-control" formControlName="categoreis" name="categoreis{{p}}" (change)="getItemsbyCategory($event,p)">   
+                                           <option   value="">--Select--</option>            
+                          <option  *ngFor="let user of categories"  value="{{user.item_type}}">{{user.item_type}}</option>
                           </select>
-
-
                         </div>
-                         
+
+                        <div class="col-md-2">
+                          <select class="form-control" formControlName="name" name="name{{p}}" (change)="getunits($event,p)">   
+                             <option selected value="">--Select--</option>                               
+                          <option  *ngFor="let user of itemaddForm.controls.activeList.value[p].catsarray"  value="{{user.mid}}">{{user.item}}</option>
+                          </select>
+                        </div>
 
                         <div class="col-md-2">
                           <div class="input-group">
-                            <input type="number" min="1" class="form-control" name="quantity" value="quantity" formControlName="quantity" />
+                            <!--<span class="input-group-addon">Kg</span>-->
+                            <input type="text" class="form-control" name="brand" value=" " formControlName="brand" />
                           </div>
                         </div>
                         <div class="col-md-2">
-                            <select class="form-control" formControlName="units"  name="units{{p}}">   
-                                                         
-                            <option  *ngFor="let user of itemaddForm.controls.activeList.value[p].unitsarray"  value="{{user}}">{{user}}</option>
-                            </select>
+                          <div class="input-group ">
+                            <!--<span class="input-group-addon">Kg</span>-->
+                            <input type="number" min="1" oninput="validity.valid||(value='');" class="form-control" name="quantity" value="quantity"
+                              formControlName="quantity" />
                           </div>
-                        <div class="col-md-2">
-                          <input type="text" name="receipt_no" class="form-control" value="receipt_no" formControlName="receipt_no" />
+                        </div>
+                        <div class="col-md-1">
+                          <select class="form-control" formControlName="units" name="units{{p}}">   
+                                                       
+                          <option  *ngFor="let user of itemaddForm.controls.activeList.value[p].unitsarray"  value="{{user}}">{{user}}</option>
+                          </select>
                         </div>
                         <div class="col-md-2">
-                          <input type="number" name="price" min="1" class="form-control" value="price" formControlName="price" />
+                          <div class="row">
+                            <div class="col-md-9 input-icon"> <i class="fa fa-inr" aria-hidden="true"></i>
+                              <input type="number" oninput="validity.valid||(value='');" name="price" min="1" class="form-control" value="price" formControlName="price"
+                              />
+                            </div>
+                            <div class="col-md-2">
+                              <a *ngIf="1<itemaddForm.controls.activeList.length" (click)="removeList(p)" style="margin-top: 0px;  cursor:pointer"><i class="fa fa-trash" style="font-size: 25px; margin-top: 5px; color: #ff3833;"></i></a>
+                            </div>
+                          </div>
                         </div>
-                        <a *ngIf="1<itemaddForm.controls.activeList.length" (click)="removeList(p)" style="margin-top: 0px;  cursor:pointer"><i class="fa fa-trash" style="font-size: 25px; margin-top: 10px; color: #ff3833;"></i></a>
+                        <div class="col-md-1">
+                          <!--<button *ngIf="p=='0'" (click)="addactiveList()" class="btn btn-default btn-square btn-sm pull-right btn-custom "><i class="fa fa-plus" ></i> More</button>-->
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
+
                 <div class="row">
                   <div class="col-md-2">
-                    <button type="submit"  [disabled]=!itemaddForm.valid  class="btn btn-default btn-square col-md-6" style="margin-top: 25px;">Submit</button>
+                    <label class="">Discount Amount on Bill </label>
+                  </div>
+                  <div class="col-md-2 input-icon">
+                    <i class="fa fa-inr" aria-hidden="true"></i>
+                    <input type="number" oninput="validity.valid||(value='');" class="form-control" name="brand" value=" " formControlName="discount"
+                    />
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-2 pull-right">
+                    <button type="submit" [disabled]=!itemaddForm.valid class="btn btn-default btn-square pull-right" style="margin-top: 25px;">Submit</button>
                   </div>
                 </div>
                 <!-- </div> -->
               </form>
 
+
             </div>
 
             <div class="tab-pane fade" id="out">
-              <button (click)="addactiveList1()" class="btn btn-default btn-sm pull-right btn-custom " style="margin-top: 24px;"><i class="fa fa-plus" ></i> More</button>
+              <button (click)="addactiveList1()" class="btn btn-default btn-square btn-sm btn-custom pull-right"><i class="fa fa-plus" ></i> More</button>
               <form (ngSubmit)="itemoutform()" method="post" [formGroup]="itemoutForm">
+
                 <div class="form-horizontal">
                   <div class="form-group">
-                    <div class="row">
-                      <label class="control-label col-md-1">Date</label>
+                    <div class="">
                       <div class="col-md-2">
+                        <label>Date</label>
                         <my-date-picker locale="en" formControlName="out_date" name="out_date" placeholder="YYYY-MM-DD" required [options]="myDatePickerOptions2"
                           (dateChanged)="onDateChanged2($event)"></my-date-picker>
                       </div>
-                      <label class="control-label col-md-1">Slot</label>
                       <div class="col-md-2">
+                        <label>Slot</label>
                         <select class="form-control" formControlName="slot" name="slot">
+                          <option value="">--Select--</option>
                         <option *ngFor="let user of slots" value="{{user.name}}">{{user.name}}</option>
+                      </select>
+                      </div>
+                      <div class="col-md-2">
+                        <label>To Whom</label>
+                        <select class="form-control" formControlName="towhom" name="towhom">
+                           <option value="">--Select--</option>
+                        <option *ngFor="let mess of messes" value="{{mess.boys}}">{{mess.boys}}</option>
                       </select>
                       </div>
                     </div>
                   </div>
-                  <div class="form-group">
-                    <div class="col-md-3">
+                  <div class="row">
+                    <div class="col-md-2">
+                      <label>Category</label>
+                    </div>
+                    <div class="col-md-2">
                       <label>Item</label>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                       <label>Quantity</label>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                       <label>Units</label>
                     </div>
 
@@ -169,24 +240,57 @@
                   <div [formGroup]="itemoutForm.controls.activeList1.controls[p]">
                     <div class="form-horizontal">
                       <div class="form-group">
-                        <div class="col-md-3">
+                        <!--<div class="col-md-3">
 
                           <select class="form-control" formControlName="name" name="name{{p}}" (change)="getunits1($event,p)">
-                        <option *ngFor="let it of data1" value="{{it.mid}}">{{it.item}}</option>
-                      </select>
-                        </div>
+                       
+                         <optgroup *ngFor="let it of categories"  label="{{it.item_type}}">
 
+                           <ng-container *ngIf="it.item_type == 'Kitchen' ">
+                                <option    *ngFor="let k of Kitchen"    value="{{k.mid}}">    {{k.item}}   </option>
+                        </ng-container>
+                         <ng-container *ngIf="it.item_type == 'PowdersandOils' ">
+                               <option *ngFor="let po of PowdersandOils"    value="{{po.mid}}">    {{po.item}}   </option> 
+                        </ng-container>
+                        <ng-container *ngIf="it.item_type == 'SpicseandNuts' ">
+                               <option *ngFor="let sn of SpicseandNuts"    value="{{sn.mid}}">    {{sn.item}}   </option>
+                        </ng-container>
+                        <ng-container *ngIf="it.item_type == 'PulsesandDals' ">
+                               <option *ngFor="let sn of Pulses_Dals"    value="{{sn.mid}}">    {{sn.item}}   </option>
+                        </ng-container>
+                         <ng-container *ngIf="it.item_type == 'Miscelleneous' ">
+                                <option *ngFor="let m of Miscelleneous"    value="{{m.mid}}">    {{m.item}}   </option>
+                        </ng-container>
+                          </optgroup>
+                          
+                      </select>
+                        </div>-->
                         <div class="col-md-2">
-                          <select class="form-control" formControlName="units"  name="units{{p}}">   
-                                                       
-                          <option  *ngFor="let user of itemoutForm.controls.activeList1.value[p].unitsarray"  value="{{user}}">{{user}}</option>
+                          <select class="form-control" formControlName="categoreis" name="categoreis{{p}}" (change)="getItemsbyCategory1($event,p)">                                                       
+                           <option value="">--Select--</option>
+                          <option  *ngFor="let user of categories"  value="{{user.item_type}}">{{user.item_type}}</option>
                           </select>
                         </div>
                         <div class="col-md-2">
-
-                          <input type="number" min="1" class="form-control" name="quantity" value="quantity" formControlName="quantity" />
+                          <select class="form-control" formControlName="name" name="name{{p}}" (change)="getunits1($event,p)">   
+                              <option selected value="">--Select--</option>                                                  
+                          <option  *ngFor="let user of itemoutForm.controls.activeList1.value[p].catsarray"  value="{{user.mid}}">{{user.item}}</option>
+                          </select>
                         </div>
-                        <a *ngIf="1<itemoutForm.controls.activeList1.length" (click)="removeList1(p)" style="margin-top: 0px;  cursor:pointer"><i class="fa fa-trash" style="font-size: 25px; margin-top: 10px; color: #ff3833;"></i></a>
+                        <div class="col-md-2">
+                          <input type="number" min="1" class="form-control" name="quantity" value="quantity" oninput="validity.valid||(value='');"
+                            formControlName="quantity" />
+                        </div>
+                        <div class="col-md-2">
+                          <select class="form-control" formControlName="units" name="units{{p}}">  
+                                                                                   
+                          <option  *ngFor="let user of itemoutForm.controls.activeList1.value[p].unitsarray"  value="{{user}}">{{user}}</option>
+                          </select>
+                        </div>
+                        <div class="col-md-1">
+                          <a *ngIf="1<itemoutForm.controls.activeList1.length" (click)="removeList1(p)" style="margin-top: 0px;  cursor:pointer"><i class="fa fa-trash" style="font-size: 25px; margin-top: 5px; color: #ff3833;"></i></a>
+                        </div>
+
                       </div>
                     </div>
                   </div>
@@ -197,8 +301,8 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-md-2">
-                    <button type="submit" [disabled]="!itemoutForm.valid" class="btn btn-default btn-square col-md-6" style="margin-top: 25px;">Submit</button>
+                  <div class="col-md-2 pull-right">
+                    <button type="submit" [disabled]="!itemoutForm.valid" class="btn btn-default btn-square pull-right" style="margin-top: 25px;">Submit</button>
                     <!-- <button type="submit" [disabled]="!itemaddForm.valid" class="btn btn-default btn-square col-md-6" style="margin-top: 25px;">Submit</button> -->
                   </div>
                 </div>
@@ -213,16 +317,19 @@
                   <div class="portlet-title">
                     <h4>Stock Register</h4>
                   </div>
+                  <div class="portlet-widgets">
+                    <input class="form-control input-height" [(ngModel)]="filterQuery1" placeholder="Search" />
+                  </div>
                   <div class="clearfix"></div>
                 </div>
                 <div *ngIf="stock_data" class="portlet-body">
-                  <div class="form-horizontal">
+                  <!--<div class="form-horizontal">
                     <div class="form-group">
                       <div class="col-md-3">
                         <input class="form-control" [(ngModel)]="filterQuery1" placeholder="Search" />
                       </div>
                     </div>
-                  </div>
+                  </div>-->
                   <div class="row">
                     <div class="col-md-12 tabel_overflow">
                       <!--<table class="table table-green table-bordered table-hover">-->
@@ -235,6 +342,9 @@
                             </th>
                             <th>
                               <mfDefaultSorter by="insert_dt"><span style="color:#fff">Transaction Date</span> </mfDefaultSorter>
+                            </th>
+                            <th>
+                              <mfDefaultSorter by="insert_dt"><span style="color:#fff">Receipt No</span> </mfDefaultSorter>
                             </th>
                             <th>
                               <mfDefaultSorter by="item_name"><span style="color:#fff">Item Name</span> </mfDefaultSorter>
@@ -257,10 +367,12 @@
                         <tbody>
                           <tr *ngFor="let item of mf.data; let i=index;">
                             <td>{{i+1}}</td>
-                            <td>{{item.edate}}</td>
+                            <!--<td>{{item.edate}}</td>-->
+                            <td>{{item.edate | date }}</td>
+                            <td>{{item.receipt_no}}</td>
                             <td>{{item.item_name}}</td>
                             <td>{{item.trans_type}}</td>
-                            <td>{{item.quantity}}</td>
+                            <td>{{item.quantity}} {{item.units}}</td>
                             <td>{{item.price}}</td>
                             <td>{{item.balance}} {{item.units}} </td>
 
@@ -276,8 +388,8 @@
                       </tbody>-->
                         <tfoot>
                           <tr>
-                            <td colspan="12">
-                              <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                            <td colspan="9">
+                              <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15,rowscount]"></mfBootstrapPaginator>
                             </td>
                           </tr>
                         </tfoot>
@@ -294,17 +406,12 @@
                   <div class="portlet-title">
                     <h4>Stock Balance</h4>
                   </div>
-
+                  <div class="portlet-widgets">
+                    <input class="form-control input-height" [(ngModel)]="filterQuery" placeholder="Search" />
+                  </div>
                   <div class="clearfix"></div>
                 </div>
                 <div *ngIf="stock_balance" class="portlet-body">
-                  <div class="form-horizontal">
-                    <div class="form-group">
-                      <div class="col-md-3">
-                        <input class="form-control" [(ngModel)]="filterQuery" placeholder="Search" />
-                      </div>
-                    </div>
-                  </div>
                   <div class="row">
                     <div class="col-md-12 tabel_overflow">
 
@@ -314,8 +421,10 @@
                           <tr>
                             <th>
                               <mfDefaultSorter by=""><span style="color:#fff">S.NO </span></mfDefaultSorter>
+                            </th> 
+                            <th>
+                              <mfDefaultSorter by="item_type"><span style="color:#fff"> Category</span></mfDefaultSorter>
                             </th>
-
                             <th>
                               <mfDefaultSorter by="item"><span style="color:#fff"> Item Name</span></mfDefaultSorter>
                             </th>
@@ -330,16 +439,17 @@
                         <tbody>
                           <tr *ngFor="let items of mf.data; let i=index;">
                             <td>{{i+1}}</td>
+                             <td>{{items.item_type}}</td>
                             <td>{{items.item}}</td>
-                                <td *ngIf="items.total_balance  >= items.minvalue"><span class="badge green" style="margin: 0px 40px 0px 2px;">{{items.total_balance}} {{items.units}}</span></td>
-                            <td *ngIf="items.total_balance <= items.minvalue"><span class="badge red " style="margin: 0px 40px 0px 2px;">{{items.total_balance}}{{items.units}}</span></td>
+                            <td *ngIf="items.total_balance  >= items.minvalue"><span class="badge green" style="margin: 0px 40px 0px 2px;">{{items.total_balance}} {{items.units}}</span></td>
+                            <td *ngIf="items.total_balance <= items.minvalue"><span class="badge red " style="margin: 0px 40px 0px 2px;">{{items.total_balance}} {{items.units}}</span></td>
                           </tr>
                         </tbody>
 
                         <tfoot>
                           <tr>
                             <td colspan="12">
-                              <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                              <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15,rowscount1]"></mfBootstrapPaginator>
                             </td>
                           </tr>
                         </tfoot>
@@ -356,17 +466,13 @@
                   <div class="portlet-title">
                     <h4>Material</h4>
                   </div>
-
+                  <div class="portlet-widgets">
+                    <input class="form-control input-height" [(ngModel)]="filterQuery" placeholder="Search" />
+                  </div>
                   <div class="clearfix"></div>
                 </div>
                 <div *ngIf="stock_balance" class="portlet-body">
-                  <div class="form-horizontal">
-                    <div class="form-group">
-                      <div class="col-md-3">
-                        <input class="form-control" [(ngModel)]="filterQuery" placeholder="Search" />
-                      </div>
-                    </div>
-                  </div>
+
                   <div class="row">
                     <div class="col-md-12 tabel_overflow">
 
@@ -377,7 +483,9 @@
                             <th>
                               <mfDefaultSorter by=""><span style="color:#fff"> S.NO</span> </mfDefaultSorter>
                             </th>
-
+                            <th>
+                              <mfDefaultSorter by="item_type"><span style="color:#fff"> Category</span></mfDefaultSorter>
+                            </th>
                             <th>
                               <mfDefaultSorter by="item"><span style="color:#fff"> Item Name</span></mfDefaultSorter>
                             </th>
@@ -391,6 +499,7 @@
                         <tbody>
                           <tr *ngFor="let its of mf.data; let i=index;">
                             <td>{{i+1}}</td>
+                            <td>{{its.item_type}}</td>
                             <td>{{its.item}}</td>
                             <td>{{its.minvalue}}</td>
                             <!--                               
@@ -400,7 +509,7 @@
 
                             <td style="text-align: center">
                               <a class="btn btn-info btn-xs btn-square" (click)="details(its)" style="margin-right: 5px; width: 50px;">Edit</a>
-                              <a class="btn btn-danger btn-xs btn-square" (click)="delete(its)" >Delete</a>
+                              <a class="btn btn-danger btn-xs btn-square" (click)="delete(its)">Delete</a>
                             </td>
 
                           </tr>
@@ -409,7 +518,7 @@
                         <tfoot>
                           <tr>
                             <td colspan="12">
-                              <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                              <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15,rowscount1]"></mfBootstrapPaginator>
                             </td>
                           </tr>
                         </tfoot>
@@ -429,56 +538,11 @@
     </div>
     <!-- /.page-content -->
   </div>
+  <!-- /#page-wrapper -->
+  <!-- end MAIN PAGE CONTENT -->
 </div>
 
-<app-modal #modal1>
-  <div class="app-modal-header">
-    <h4 style="color:black">
-      Add New item <a data-dismiss="modal" class="pull-right" (click)="close()">x</a>
-    </h4>
-  </div>
-  <div class="app-modal-body">
-    <div class="col-lg-12">
-      <div class="portlet  portlet-default">
-        <div class="portlet-heading">
-          <div class="portlet-title">
-            <h4>Add Item</h4>
-          </div>
-          <div class="clearfix"></div>
-        </div>
-        <div class="portlet-body">
-          <form (ngSubmit)="submit()" method="post" [formGroup]="newitemaddForm">
-            <div class="form-horizontal">
-              <div class="form-group">
-                <label class="col-sm-2 control-label">Item</label>
-                <div class="col-sm-10">
-                  <input type="text" class="form-control" name="item1" value="item1" formControlName="item1" />
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-2 control-label">Units</label>
-                <div class="col-sm-10">
-                  <select class="form-control" formControlName="units1" name="units1">
-                          <option *ngFor="let it of units" value="{{it.u}}">{{it.u}}</option>                                 
-                    </select>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="col-sm-4 col-sm-offset-5">
-                  <button type="submit" [disabled]=!newitemaddForm.valid class="btn btn-default btn-square" style="margin-top: 25px;">Submit</button>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-      <!-- /.portlet -->
-    </div>
-  </div>
-  <!-- <div class="app-modal-footer" style="margin-top: 10px;">
-    <button type="button" class="btn btn-default btn-square" (click)="submit();">Submit</button>
-  </div> -->
-</app-modal>
+
 
 <popup #popup2 (confirmClick)="ok()">
   <div>
@@ -499,7 +563,6 @@
 
 
 <popup #popup1>
-
   <div>
     <div>
       <div>
@@ -511,15 +574,32 @@
         </div>
         <div class="portlet-body">
           <form (ngSubmit)="submit()" method="post" [formGroup]="newitemaddForm">
+            <div class="row">
+              <div class="col-md-12">
+                <label>If Category not available in Category list ..click here to add </label>
+                <button (click)="addnewcategory()" type="button" style="margin-left:10px" class="btn btn-blue btn-sm pull-right btn-square">Add Category</button>
+              </div>
+            </div>
+            <br/>
+            <!--<div class="clearfix"></div>-->
+
             <div class="form-horizontal">
               <div class="form-group">
-                <label class="col-sm-2 control-label">Item</label>
+                <label class="col-sm-2 control-label">Item<span style="color:red">*</span></label>
                 <div class="col-sm-10">
                   <input type="text" class="form-control" name="item1" value="item1" formControlName="item1" />
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-2 control-label">Units</label>
+                <label class="col-md-2 control-label">Category<span style="color:red">*</span></label>
+                <div class="col-sm-10">
+                  <select class="form-control" formControlName="item_type" name="item_type">
+                          <option *ngFor="let iid of categories" value="{{iid.item_type}}">{{iid.item_type}}</option>                                 
+                    </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Units<span style="color:red">*</span></label>
                 <div class="col-sm-10">
                   <select class="form-control" formControlName="units1" name="units1">
                           <option *ngFor="let it of units" value="{{it.u}}">{{it.u}}</option>                                 
@@ -527,7 +607,7 @@
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-2 control-label">Minimum Stock</label>
+                <label class="col-sm-2 control-label">Minimum Stock<span style="color:red">*</span></label>
                 <div class="col-sm-10">
                   <input type="text" class="form-control" name="minvalue" value="minvalue" formControlName="minvalue" />
                 </div>
@@ -552,23 +632,23 @@
   </div> -->
 </popup>
 
- <popup #popup3>
+<popup #popup3>
+  <div>
+
     <div>
-  
-      <div>
-  
-        <div class="alert alert-success " role="alert ">Are you want to delete? - {{item}}</div>
-      </div>
-      <div>
-          <button type="button" class="btn btn-default btn-square" (click)="delete1();">Yes</button>
-          <button type="button" class="btn btn-danger btn-square" (click)="close1();">No</button>
-      </div>
-      <br>
+
+      <div class="alert alert-success " role="alert ">Are you want to delete? - {{item}}</div>
     </div>
+    <div>
+      <button type="button" class="btn btn-default btn-square" (click)="delete1();">Yes</button>
+      <button type="button" class="btn btn-danger btn-square" (click)="close1();">No</button>
+    </div>
+    <br>
+  </div>
 </popup>
 
 
-<popup #popup4 (confirmClick)="ok()">
+<!--<popup #popup4 (confirmClick)="ok()">
   <div>
     <div>
       <div>
@@ -605,12 +685,99 @@
                 <div class="col-sm-8 col-sm-offset-4">
                   <button type="submit" [disabled]=!newitemaddForm.valid class="btn btn-default btn-square" style="margin-top: 25px;">Submit</button>
                   <button data-dismiss="modal" class="pull-right" (click)="close4()" class="btn btn-danger btn-square" style="margin-top: 25px;">Close</button>
+ 
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+ 
+    </div>
+  </div>
+</popup>-->
+
+<popup #popup4 (confirmClick)="ok()">
+  <div>
+    <div>
+      <div>
+        <div>
+          <div>
+            <h4> </h4>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+        <div class="portlet-body">
+          <form (ngSubmit)="Update()" method="post" [formGroup]="newitemaddForm">
+            <div class="form-horizontal">
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Item</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="item1" value="item1" formControlName="item1" disabled />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Item Type</label>
+                <div class="col-sm-10">
+                  <select class="form-control" formControlName="item_type" name="item_type">
+                            <option *ngFor="let it of categories" value="{{it.item_type}}">{{it.item_type}}</option>                                 
+                    </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Units</label>
+                <div class="col-sm-10">
+                  <select class="form-control" formControlName="units1" name="units1">
+                          <option *ngFor="let it of units" value="{{it.u}}">{{it.u}}</option>                                 
+                    </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">Minimum Stock</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="minvalue" value="minvalue" formControlName="minvalue" />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-sm-8 col-sm-offset-4">
+                  <button type="submit" [disabled]=!newitemaddForm.valid class="btn btn-default btn-square" style="margin-top: 25px;">Submit</button>
+                  <button data-dismiss="modal" class="pull-right" (click)="close4()" class="btn btn-danger btn-square" style="margin-top: 25px;">Close</button>
 
                   <!--<a data-dismiss="modal" class="pull-right" (click)="close()">x</a>-->
                 </div>
               </div>
             </div>
           </form>
+        </div>
+      </div>
+      <!-- /.portlet -->
+    </div>
+  </div>
+</popup>
+
+<popup #popup5>
+  <div>
+    <div>
+      <div>
+        <div>
+          <h4> </h4>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Category Name</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" name="category" [(ngModel)]="category" />
+        </div>
+
+        <div class="portlet-body">
+          <div class="form-group">
+            <div class="col-sm-8 col-sm-offset-4">
+              <button (click)="addcategory()" type="submit" class="btn btn-default btn-square" style="margin-top: 25px;">Submit</button>
+              <button data-dismiss="modal" class="pull-right" (click)="close5()" class="btn btn-danger btn-square" style="margin-top: 25px;">Close</button>
+            </div>
+          </div>
         </div>
       </div>
       <!-- /.portlet -->

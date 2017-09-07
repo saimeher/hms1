@@ -39,37 +39,61 @@ export class MessinchargeComponent implements OnInit {
   array;
  data3;
   todaydate=new Date();
+  rowscount:string='10';
+  rowscount1 :string='10';
+ 
   public toasterconfig: ToasterConfig = 
   new ToasterConfig({
       timeout        : 5000
   });
+
+  db_date =JSON.parse(localStorage.getItem('date'));
+  db_month=JSON.parse(localStorage.getItem('month'));
+  db_year=JSON.parse(localStorage.getItem('year'));
   public toasterService: ToasterService;
   @ViewChild('modal1') modal1: ModalComponent;
   @ViewChild('popup2') popup2: Popup;
   @ViewChild('popup1') popup1: Popup;
   @ViewChild('popup3') popup3: Popup;
   @ViewChild('popup4') popup4: Popup;
+  @ViewChild('popup5') popup5: Popup;
   // public data;
   public filterQuery = "";
   public filterQuery1 = "";
-  public rowsOnPage = 10;
+  public rowsOnPage = 15;
   public sortBy = "name";
   public sortOrder = "asc";
-  
+ 
+ 
 
-  constructor(private _router: Router,
+    constructor(private _router: Router,
     private _route: ActivatedRoute,
     private _apiService: ApiService,
     public fb: FormBuilder,
     toasterService: ToasterService,
     private popup:Popup)
      {
+      
+      
       this.toasterService = toasterService;
      
 
     this.stockRegister();
     this.stockBalance();
     this.getlists();
+     
+    //  this._apiService.getlastInsertDate().subscribe(date=>{
+    //     console.log(date);
+    //     let date1=date.data.data;
+    //       this._apiService.year= JSON.parse(date1.year);
+    //       this._apiService.month= JSON.parse(date1.month);
+    //       this._apiService.day= JSON.parse(date1.day);       
+     
+    
+    //        console.log(this.year1,this.month1,this.day1);
+    //   })
+    console.log(this._apiService.year,this._apiService.month,this._apiService.day);
+    
     }
 
   slots: Array<any> = [
@@ -86,21 +110,35 @@ export class MessinchargeComponent implements OnInit {
         { u: 'packets'},
         { u: 'gms'},
       ];
-      
+  messes: Array<any> = [
+
+    { boys: 'Boys Mess' },
+    { boys: 'Girls Mess' },
+    
+  ];    
  a: any;
  events={};
+
   ngOnInit() {
+   
+   //  this.temploading!=!this.loading;
     this.itemaddForm = this.fb.group({
       insert_date: ['', Validators.required],
+      receipt_no:[''],
+      discount : [''],
+      purchaser:['',Validators.required],
       activeList: this.fb.array([]),
+      
     });
     this.itemoutForm = this.fb.group({
       out_date: ['', Validators.required],
       slot: ['', Validators.required],
+      towhom: ['', Validators.required],
       activeList1: this.fb.array([]),
     });
     this.newitemaddForm = this.fb.group({
       item1: ['', Validators.required],
+      item_type:['', Validators.required],
       units1: ['', Validators.required],
       minvalue : ['',Validators.required]
     });
@@ -110,6 +148,9 @@ export class MessinchargeComponent implements OnInit {
 
     
      this.getunits(this.events,this.a)
+     this.getCategories();
+     this.getnames()
+   
   }
   addactiveList() {
 
@@ -137,11 +178,13 @@ export class MessinchargeComponent implements OnInit {
   initLink() {
     return this.fb.group({
       name: ['', Validators.required],
+      brand:[''],
       quantity: ['', Validators.required],
-       units:['',Validators.required],
-      receipt_no:['',Validators.required],
+      units:['',Validators.required],
       price: ['', Validators.required],
       unitsarray :this.fb.array([]),
+      categoreis:['',Validators.required],
+      catsarray :this.fb.array([]),
       // insert_date:['',Validators.required],
       
 
@@ -156,15 +199,13 @@ export class MessinchargeComponent implements OnInit {
 
     console.log(this.itemaddForm.value);
     this._apiService.insertlist(p).subscribe(data => {
-
-      this.onSaveComplete(data)
+    this.onSaveComplete(data)
     },
     (error: any) => this.errorMessage = <any>error
   );
   }
   onSaveComplete(data): void {
     console.log(data);
-    
     if (!data.success)
     {
         console.error('Savign failed');
@@ -176,9 +217,9 @@ export class MessinchargeComponent implements OnInit {
         console.log('Saving successful');
         this.popToast();
         this.itemaddForm.reset();
+        this.getnames();
+        this.getCategories();
         this.ngOnInit();
-        // this.itemaddForm.clearValidators();
-       // this.initLink();
         this.stockBalance();
         this.stockRegister();  
     }
@@ -190,7 +231,6 @@ export class MessinchargeComponent implements OnInit {
       const control = <FormArray>this.itemoutForm.controls['activeList1'];
       const addrCtrl = this.initLink1();
       control.push(addrCtrl);
-  
       console.log(control.length);
       this.addmore_length = (control.length);
   
@@ -208,8 +248,11 @@ export class MessinchargeComponent implements OnInit {
      return this.fb.group({
       name: ['', Validators.required],
       quantity: ['', Validators.required],
+
       units: ['',Validators.required],
-       unitsarray :this.fb.array([])
+       unitsarray :this.fb.array([]),
+       categoreis:['',Validators.required],
+      catsarray :this.fb.array([]),
     });
    }
    balance;
@@ -269,19 +312,23 @@ export class MessinchargeComponent implements OnInit {
 }
 
   public myDatePickerOptions: IMyDpOptions = {
-    // other options...
+    // other options...   
+    //console.log(this._apiService.year,this._apiService.month,this._apiService.day);
     dateFormat: 'yyyy-mmm-dd',
     editableDateField: false,
     disableWeekends: false,
+    disableUntil: {year: this.db_year, month: this.db_month, day: this.db_date},
     disableSince: { year: this.todaydate.getFullYear(), month: this.todaydate.getMonth()+1, day: this.todaydate.getDate()+1 }
 
+    
   };
-
+    
   public myDatePickerOptions2: IMyDpOptions = {
     // other options...
     dateFormat: 'yyyy-mmm-dd',
     editableDateField: false,
     disableWeekends: false,
+    disableUntil: {year: this.db_year, month: this.db_month, day: this.db_date},
     disableSince: { year: this.todaydate.getFullYear(), month: this.todaydate.getMonth()+1, day: this.todaydate.getDate()+1 }
   };
   picker1day;
@@ -290,6 +337,7 @@ export class MessinchargeComponent implements OnInit {
   
 
   onDateChanged(event: IMyDateModel) {
+  //   this.myDatePickerOptions.disableUntil = {year: this.year1, month: this.month1, day: this.day1},
     this.insert_date = event.date.year+'-'+event.date.month+'-'+event.date.day;
     console.log(this.insert_date,'dtae test');
     // this.insert_date = event.formatted;
@@ -302,14 +350,18 @@ export class MessinchargeComponent implements OnInit {
     console.log(this.out_date, 'from date test');
     // this.out_date = event.formatted
   }
+ 
+    
 
   stockRegister() {
+    
     this._apiService.stockRegister().subscribe(stockdata => {
       if (stockdata) {
 
 
         this.stock_data = stockdata.data.data;
         console.log(this.stock_data);
+        this.rowscount = this.stock_data.length;
       }
     })
   }
@@ -324,12 +376,14 @@ export class MessinchargeComponent implements OnInit {
           stockbalance.data.data[i].minvalue= parseInt(stockbalance.data.data[i].minvalue);
         }
         this.stock_balance = stockbalance.data.data;
-        console.log(this.stock_balance);
+        this.rowscount1=this.stock_balance.length;
+        console.log(this.stock_balance,this.rowscount1);
       }
     })
   }
 
   addnewitem() {
+    this.getCategoriesfornewItem();
     this.popup.options = {
     header: "Add New Item",
     color: "#2c3e50", // red, blue.... 
@@ -384,10 +438,33 @@ this.popup1.show();
     //this.modal1.hide();
     this.popup1.hide();
   }
+  Kitchen=[];
+  PowdersandOils=[];
+  SpicseandNuts=[];
+  Miscelleneous=[];
+  Pulses_Dals=[];
   getlists() {
     this._apiService.getlist().subscribe(data1 => {
       this.data1 = data1.data;
-      console.log(this.data1);
+      console.log(this.data1[0]);
+      //console.log(this.data1[0][Kitchen]);
+      this.data1.forEach(element => {
+        if(element.item_type=='Kitchen'){
+          this.Kitchen.push(element);
+        }
+        if(element.item_type=='PowdersandOils'){
+          this.PowdersandOils.push(element);
+        }
+        if(element.item_type=='SpicseandNuts'){
+          this.SpicseandNuts.push(element);
+        }
+        if(element.item_type=='Miscelleneous'){
+          this.Miscelleneous.push(element);
+        }
+        if(element.item_type=='PulsesandDals'){
+          this.Pulses_Dals.push(element);
+        }
+      });
     })
   } 
   popToast() {
@@ -398,7 +475,6 @@ this.popup1.show();
   }
   goPopup2() {
         //myModal.open()    
-
         this.popup2.options = {
             header           : "Warning!",
             color            : "#34495e",        // red, blue.... 
@@ -408,7 +484,6 @@ this.popup1.show();
             animation        : "bounceInDown",   // 'fadeInLeft', 'fadeInRight', 'fadeInUp', 'bounceIn','bounceInDown' 
         };
         this.popup2.show(this.popup2.options);
-
         //this.popup1.show();
   }
     ok() {
@@ -435,9 +510,7 @@ this.popup1.show();
         'units' : this.v
       }
       console.log(val);
-      
-
-      this._apiService.getunits(val).subscribe(dat=>
+       this._apiService.getunits(val).subscribe(dat=>
       {
          this.dat1=dat.data.data;
        //  console.log(dat.data.data.units);
@@ -445,18 +518,10 @@ this.popup1.show();
          console.log(this.test,'jjjjj');
          
       //  this.test.forEach(element => {
-          this.temp.push({'units':dat.data.data.units});
+          // this.temp.push({'units':dat.data.data.units});
       //  });
         console.log(dat,'dat test');
-         this.test=dat.data.data.units.split(",")
-         console.log(this.itemaddForm.controls.activeList);
-        //  console.log(this.itemaddForm.controls.activeList[0].controls);
-     // this.itemaddForm.controls.activeList.value[0].unitsarray=[];
-      //  this.itemaddForm.controls.activeList.value[0].unitsarray[0] = this.test;
-          
-        // this.itemaddForm.value.activeList[p].units =  dat1.data[0].units.split(",");
-      //  console.log(this.itemaddForm.controls.activeList.value[p].unitsarray,'split test');
-        
+        //  this.test=dat.data.data.units.split(",") 
       })
       }
      if(p>=0){
@@ -490,6 +555,7 @@ this.popup1.show();
        
       //  console.log(this.itemaddForm.controls.activeList[0].controls);
              // this.itemaddForm.controls.activeList.value[p].unitsarray= [];
+              this.itemaddForm.controls.activeList.value[p].unitsarray.splice(-1,1)
         this.itemaddForm.controls.activeList.value[p].unitsarray.push(this.test);
        //  this.temp.push(this.test);
    //this.itemaddForm.controls.activeList.value[p].unitsarray=[];
@@ -505,6 +571,7 @@ this.popup1.show();
     let insert = {};
     insert['mid'] = this.mid;
     insert['units1'] = this.newitemaddForm.value.units1;
+    insert['item_type'] = this.newitemaddForm.value.item_type;
     insert['item1'] = this.newitemaddForm.value.item1;
     insert['minvalue'] = this.newitemaddForm.value.minvalue;
     console.log(insert);
@@ -551,7 +618,7 @@ this.popup1.show();
       cancleBtnContent: "Cancel", // the text on your cancel button 
       confirmBtnClass: "btn btn-info", // your class for styling the confirm button 
       cancleBtnClass: "btn btn-default", // you class for styling the cancel button 
-      animation: "fadeInDown",// 'fadeInLeft', 'fadeInRight', 'fadeInUp', 'bounceIn','bounceInDown' 
+      animation: "bounceInDown",// 'fadeInLeft', 'fadeInRight', 'fadeInUp', 'bounceIn','bounceInDown' 
     };
     console.log(its);
 
@@ -572,11 +639,12 @@ this.popup1.show();
     this.newitemaddForm.patchValue({
       item1: its.item,
       units1: its.units,
-      minvalue: its.minvalue
+      minvalue: its.minvalue,
+      item_type:its.item_type
     });
 
     this.popup.options = {
-      header: "Success!",
+      header: "Update",
       color: "#34495e", // red, blue.... 
       widthProsentage: 50, // The with of the popou measured by browser width 
       animationDuration: 1, // in seconds, 0 = no animation 
@@ -585,7 +653,7 @@ this.popup1.show();
       cancleBtnContent: "Cancel", // the text on your cancel button 
       confirmBtnClass: "btn btn-info", // your class for styling the confirm button 
       cancleBtnClass: "btn btn-default", // you class for styling the cancel button 
-      animation: "fadeInDown",// 'fadeInLeft', 'fadeInRight', 'fadeInUp', 'bounceIn','bounceInDown' 
+      animation: "bounceInDown",// 'fadeInLeft', 'fadeInRight', 'fadeInUp', 'bounceIn','bounceInDown' 
     };
     console.log(its);
 
@@ -624,13 +692,6 @@ this.popup1.show();
         console.log(dat,'dat test');
          this.test=dat.data.data.units.split(",")
          console.log(this.itemoutForm.controls.activeList1);
-        //  console.log(this.itemaddForm.controls.activeList[0].controls);
-     // this.itemaddForm.controls.activeList.value[0].unitsarray=[];
-      //  this.itemaddForm.controls.activeList.value[0].unitsarray[0] = this.test;
-          
-        // this.itemaddForm.value.activeList[p].units =  dat1.data[0].units.split(",");
-      //  console.log(this.itemaddForm.controls.activeList.value[p].unitsarray,'split test');
-        
       })
       }
      if(p>=0){
@@ -664,6 +725,7 @@ this.popup1.show();
        
       //  console.log(this.itemaddForm.controls.activeList[0].controls);
              // this.itemaddForm.controls.activeList.value[p].unitsarray= [];
+        this.itemoutForm.controls.activeList1.value[p].unitsarray.splice(-1,1);
         this.itemoutForm.controls.activeList1.value[p].unitsarray.push(this.test);
        //  this.temp.push(this.test);
    //this.itemaddForm.controls.activeList.value[p].unitsarray=[];
@@ -675,7 +737,148 @@ this.popup1.show();
   
     }
 
+categories;
+    getCategories(){
+      this._apiService.getCategories().subscribe(Data=>{
+        console.log(Data);
+        this.categories=Data.data.data;
+         console.log(this.categories);
+      })
+    }
 
 
+     getItemsbyCategory(event,p)
+    {
+      console.log(p);
+      this.v='';
+      
+      
+     if(p>=0){
+       console.log(p);
+       
+       this.temp=[];
+         this.v=event.target.value;
+      let val={
+        'category' : this.v
+      }
+      console.log(val);
+      
+       this._apiService.getItemsbyCategory(val).subscribe(dat=>
+      {
+        console.log(dat);       
+        this.dat1=dat.data.data;
+         console.log(this.dat1);
+         this.test = this.dat1;
+         this.test.forEach(element => {
+           this.itemaddForm.controls.activeList.value[p].catsarray.splice(0,this.itemaddForm.controls.activeList.value[p].catsarray.length)
+        //this.itemaddForm.controls.activeList.value[p].catsarray.push({'mid':element.mid,'item':element.item});
+       });
+        this.test.forEach(element => {
+        //   this.itemaddForm.controls.activeList.value[p].catsarray.splice(1,this.itemaddForm.controls.activeList.value[p].catsarray.length)
+         this.itemaddForm.controls.activeList.value[p].catsarray.push({'mid':element.mid,'item':element.item});
+       });
+      console.log( this.itemaddForm.controls.activeList.value[p].catsarray.length);
+      
+       console.log(this.itemaddForm.controls.activeList.value[p].catsarray);
+      })
+     }
   
+    }
+
+     getItemsbyCategory1(event,p)
+    {
+     this.v='';
+      if(p>=0){
+      this.temp=[];
+         this.v=event.target.value;
+      let val={
+        'category' : this.v
+      }
+      this._apiService.getItemsbyCategory(val).subscribe(dat=>
+      {
+        console.log(dat);       
+        this.dat1=dat.data.data;
+         console.log(this.dat1);
+         this.test = this.dat1;
+         this.test.forEach(element => {
+           this.itemoutForm.controls.activeList1.value[p].catsarray.splice(0,this.itemoutForm.controls.activeList1.value[p].catsarray.length)
+        //this.itemaddForm.controls.activeList.value[p].catsarray.push({'mid':element.mid,'item':element.item});
+       });
+        this.test.forEach(element => {
+        //   this.itemaddForm.controls.activeList.value[p].catsarray.splice(1,this.itemaddForm.controls.activeList.value[p].catsarray.length)
+         this.itemoutForm.controls.activeList1.value[p].catsarray.push({'mid':element.mid,'item':element.item});
+       });
+       
+      })
+     }
+  
+    }
+
+dat0;
+  getnames()
+  {
+   this._apiService.getnames().subscribe(data=>
+  {
+    this.dat0= data.data.data;
+    console.log(data.data.data);
+  })
+}
+
+category;
+addnewcategory()
+    {
+      this.popup.options = {
+        header: "Add Category",
+        color: "#34495e", // red, blue.... 
+        widthProsentage: 40, // The with of the popou measured by browser width 
+        animationDuration: 1, // in seconds, 0 = no animation 
+        showButtons: false, // You can hide this in case you want to use custom buttons 
+        confirmBtnContent: "ok", // The text on your confirm button 
+        cancleBtnContent: "Cancel", // the text on your cancel button 
+        confirmBtnClass: "btn btn-info", // your class for styling the confirm button 
+        cancleBtnClass: "btn btn-default", // you class for styling the cancel button 
+        animation: "fadeInDown",// 'fadeInLeft', 'fadeInRight', 'fadeInUp', 'bounceIn','bounceInDown' 
+      };
+
+      this.popup5.show();
+    }
+    close5()
+    {
+      this.popup5.hide();
+      this.category = '';
+    }
+    addcategory()
+     {
+      console.log(this.category);
+      let b={}
+      b['category']= this.category;
+      this._apiService.addcategory(b).subscribe(data8=>{
+        if(!data8.data.success){
+          console.log('insert failsed');
+           this.popToast1();
+       }
+        else{
+          console.log(data8.data.success)
+          // this.data2 = data2;
+          console.log('insert');
+          
+        
+          this.popToast();
+          this.getCategories();
+          this.category = '';
+          this.popup5.hide();
+          this.getlists();
+        }
+    }
+   )
+  }
+
+getItemCategory;
+  getCategoriesfornewItem(){
+    this._apiService.getCategoriesfornewItem().subscribe(Data=>{
+        console.log(Data);
+        this.getItemCategory=Data.data.data;
+         console.log(this.getItemCategory);
+      })
+  } 
 }

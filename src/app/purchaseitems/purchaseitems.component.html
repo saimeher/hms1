@@ -36,13 +36,13 @@
       <div class="portlet portlet-default">
         <div class="portlet-heading">
           <div class="portlet-title">
-            <h4> To be Purchased List </h4> 
+            <h4> To be Purchased List </h4>
           </div>
-          <div class="portlet-widgets">
+          <!-- <div class="portlet-widgets">
             <a (click)="itembuy()" style="cursor: pointer !important"><i class="fa fa-plus-square"></i> <span class="divider"></span> Buy</a>
-          </div>
+          </div> -->
           <div class="clearfix"></div>
-           
+
         </div>
         <div class="portlet-body">
           <div class="form-horizontal">
@@ -53,25 +53,25 @@
             </div>
             <div class="form-group">
               <div class="col-md-1">
-                 <label>Select Date</label>
+                <label>Select Date</label>
               </div>
               <div class="col-md-2">
                 <my-date-picker locale="en" #start ngDefaultControl [(ngModel)]="model" placeholder="YYYY-MM-DD" [options]="myDatePickerOptions"
-                          (dateChanged)="onDateChanged($event)"></my-date-picker>
+                  (dateChanged)="onDateChanged($event)"></my-date-picker>
               </div>
               <div class="col-md-1">
-                 <label>Status</label>
+                <label>Status</label>
               </div>
               <div class="col-md-3">
-                <select class="form-control"    (change)="changeStatus($event)">
+                <select class="form-control" (change)="changeStatus($event)" [(ngModel)]="selectedstatus">
                            <option    value="all">ALL  </option>
-                            <option    value="0">To Be Buyed  </option>
-                             <option    value="1"> Buyed  </option>
+                            <option    value="0">To Be bought  </option>
+                             <option    value="1"> Closed </option>
                             <!--<option *ngFor="let key of objectKeys(data1)" value="{{it.mid}}">{{key + ' : ' + data1[key]}}</option>-->
                           </select>
               </div>
             </div>
-             
+
           </div>
           <div class="row">
             <div class="col-md-12 tabel_overflow">
@@ -83,22 +83,25 @@
                     <th>
                       <mfDefaultSorter by=""><span style="color:#fff">S.NO</span></mfDefaultSorter>
                     </th>
+                    <th>
+                        <mfDefaultSorter by="units"><span style="color:#fff">Date</span></mfDefaultSorter>
+                    </th>
 
                     <th>
-                      <mfDefaultSorter by="item"><span style="color:#fff">Item Name</span></mfDefaultSorter>
+                      <mfDefaultSorter by="item"><span style="color:#fff">Purchaser Name</span></mfDefaultSorter>
                     </th>
                     <th>
-                      <mfDefaultSorter by="quantity"><span style="color:#fff">Quantity</span></mfDefaultSorter>
+                      <mfDefaultSorter by="quantity"><span style="color:#fff">Mobile no</span></mfDefaultSorter>
                     </th>
                     <th>
-                     <mfDefaultSorter by="units"><span style="color:#fff">Units</span></mfDefaultSorter>
+                        <mfDefaultSorter by="details"><span style="color:#fff">Details</span></mfDefaultSorter>
                       </th>
                     <th>
                       <span style="color:#fff">Status</span>
                     </th>
-                    <th>
+                    <!-- <th>
                       <span style="color:#fff">Options</span>
-                    </th>
+                    </th> -->
 
 
                   </tr>
@@ -106,22 +109,23 @@
                 <tbody>
                   <tr *ngFor="let pdata of mf.data; let i=index;">
                     <td>{{i+1}}</td>
-                    <td>{{pdata.item}}</td>
-                    <td>{{pdata.quantity}}</td>
-                    <td>{{pdata.units}}</td>
-                    <td *ngIf="pdata.status =='0' "><span class="badge red" style="margin: 0px 40px 0px 2px;">To be Buyed</span> </td>
-                    <td *ngIf="pdata.status =='1' "><span class="badge green" style="margin: 0px 40px 0px 2px;">Buyed</span> </td>
-                    <td  *ngIf="pdata.status =='1' "></td>
-                    <td *ngIf="pdata.status =='0' "><input type="checkbox" (ngModelChange)="checkedItems(pdata, $event)" checked="false" [ngModel]="!pdata"></td>
+                    <td>{{pdata.pdate | date:'medium' }}</td>
+                    <td>{{pdata.name}}</td>
+                    <td>{{pdata.mobile_no}}</td>
+                    <td><a class="btn btn-info btn-xs btn-square" (click)="purchaserdetails(pdata)" style="margin-right: 5px; width: 50px;">View</a></td>
+                    <td *ngIf="pdata.status =='0' "><span class="badge red" style="margin: 0px 40px 0px 2px;">To be bought</span> </td>
+                    <td *ngIf="pdata.status =='1' "><span class="badge green" style="margin: 0px 40px 0px 2px;">Closed</span> </td>
+                    <!--  <td  *ngIf="pdata.status =='1' "></td>
+                    <td *ngIf="pdata.status =='0' "><input type="checkbox" (ngModelChange)="checkedItems(pdata, $event)" checked="false" [ngModel]="!pdata"></td> -->
                   </tr>
                 </tbody>
                 <tbody *ngIf="mf.data.length == 0">
-                    <tr rowspan="2">
-                      <td colspan="12">
-                        <h4 *ngIf="mf.data.length == 0" class="text-center"> No Data found</h4>
-                      </td>
-                    </tr>
-                  </tbody>
+                  <tr rowspan="2">
+                    <td colspan="12">
+                      <h4 *ngIf="mf.data.length == 0" class="text-center"> No Data found</h4>
+                    </td>
+                  </tr>
+                </tbody>
 
                 <tfoot>
                   <tr>
@@ -142,3 +146,47 @@
       </div>
       <!-- /#page-wrapper -->
       <!-- end MAIN PAGE CONTENT -->
+
+
+
+<popup #popup3>
+  <div>
+    <div>
+      <div>
+        <div>
+          <div>
+            <h4> </h4>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+        <div class="portlet-body">
+          <table class="table table-bordered table-green">
+            <thead>
+              <tr>
+                <th>S.no</th>
+                <th>Item Name</th>
+                <th> Quantity </th>
+                <th>Units</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let pdata1 of pdetails; let i=index;">
+                <td>{{i+1}}</td>
+                <td>{{pdata1.item}}</td>
+                <td>{{pdata1.quantity}}</td>
+                <td>{{pdata1.units}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-12">
+          
+          <button (click)="close1()" class="btn btn-danger pull-right btn-square">Cancel</button>
+          <!-- <button (click)="status()" class="btn btn-default pull-right btn-square" style="margin-right: 5px">Closed</button> -->
+        </div>
+      </div>
+  </div>
+</popup>

@@ -74,12 +74,12 @@
           </li>
           <li>
             <a [ngClass]="{'active': (page=='menulist')}" [routerLink]="['/menulist']">
-                <i class="fa fa-angle-double-right"></i> MenuList
+                <i class="fa fa-angle-double-right"></i> Menu List
             </a>
           </li>
           <li>
             <a [ngClass]="{'active': (page=='purchase')}" [routerLink]="['/purchase']">
-                <i class="fa fa-angle-double-right"></i> Purchase Management
+                <i class="fa fa-angle-double-right"></i> Request Management
             </a>
           </li>
           <li>
@@ -87,7 +87,16 @@
                 <i class="fa fa-angle-double-right"></i> To be Purchased
             </a>
           </li>
-          
+           <li>
+            <a [ngClass]="{'active': (page=='purchases')}" [routerLink]="['/purchases']">
+                <i class="fa fa-angle-double-right"></i> Purchaser Management
+            </a>
+          </li>
+          <li>
+              <a [ngClass]="{'active': (page=='reports')}" [routerLink]="['/reports']">
+                  <i class="fa fa-angle-double-right"></i>View Reports 
+              </a>
+            </li>
 
         </ul>
       </li>

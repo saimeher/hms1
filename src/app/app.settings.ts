@@ -28,7 +28,18 @@ export class AppSettings {
   public static DELETEITEM_API: string = 'http://localhost/hmsserver/Api/deleteitem';
   public static SELECTED_PURCHASEDATA: string = 'http://localhost/hmsserver/Api/selected_PurchaseData';
   public static ITEMBUY_API:string ='http://localhost/hmsserver/Api/itembuy';
+  public static GETCATEGORIES_API:string ='http://localhost/hmsserver/Api/getCategories';
+  public static GETITEMSBYCATEGORY_API:string ='http://localhost/hmsserver/Api/getItemsbyCategory';
   public static GETNAMES_API:string ='http://localhost/hmsserver/Api/getnames';
   public static PURCHASERDETAILS_API:string = 'http://localhost/hmsserver/Api/purchaserdetails';
-
+  public static STATUS_API:string ='http://localhost/hmsserver/Api/status';
+  public static PURCHASERS_NAME_API: string = 'http://localhost/hmsserver/Api/purchasersname'
+  public static PURCHASERS_UPDATE_API: string = 'http://localhost/hmsserver/Api/purchaseupdate';
+  public static PURCHASERS_DELETE_API:string = 'http://localhost/hmsserver/Api/purchasersdelete';
+  public static ADDCATEGORY_API:string = 'http://localhost/hmsserver/Api/addcategory';
+  public static GETCATEGORIESFORNEWITEM:string = 'http://localhost/hmsserver/Api/getCategoriesfornewItem';
+  public static GETLASTINSERTDATE:string = 'http://localhost/hmsserver/Api/getlastInsertDate';
+  public static REPORTSDATE_API:string = 'http://localhost/hmsserver/Api/reportsdate';
+  public static DETAILS_API:string='http://localhost/hmsserver/Api/details';
+  
 }
